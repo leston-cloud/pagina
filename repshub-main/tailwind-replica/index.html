@@ -28,9 +28,12 @@
   .hide-scrollbar{ scrollbar-width:none; }
 
   #topBanner.closed{ display:none; }
+  .app-view.hidden{ display:none; }
 </style>
 </head>
 <body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen pb-16 md:pb-0">
+
+<div id="view-home" class="app-view flex-1 flex flex-col">
 
 <!-- ============ TOP PROMO BANNER ============ -->
 <div id="topBanner" class="relative bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-white text-center text-xs sm:text-sm font-extrabold py-2 px-10">
@@ -68,11 +71,11 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
           Español / USD
         </button>
-        <a href="#" class="relative">
+        <a href="#" data-open-view="cart" class="relative">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           <span class="absolute -top-1.5 -right-1.5 bg-white text-[#f0384a] text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">0</span>
         </a>
-        <button class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
+        <button data-open-view="mine" class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
       </div>
@@ -348,6 +351,105 @@
   </footer>
 </main>
 
+</div><!-- /view-home -->
+
+<!-- ============ VIEW: CART (empty state) ============ -->
+<div id="view-cart" class="app-view hidden flex-1 flex flex-col bg-gray-50">
+  <header class="bg-white border-b border-gray-100 sticky top-0 z-40">
+    <div class="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
+      <button data-open-view="home" aria-label="Volver a Home" class="w-8 h-8 -ml-1 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h1 class="font-extrabold text-gray-800">Carruaje de carga</h1>
+      <button aria-label="Actualizar" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-gray-700 transition-colors">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v6h-6"/></svg>
+      </button>
+    </div>
+  </header>
+  <div class="flex-1 flex flex-col items-center justify-center gap-5 px-6 pb-24 pt-16">
+    <svg width="110" height="110" viewBox="0 0 24 24" fill="none" stroke="#fbcfd6" stroke-width="1.3">
+      <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    </svg>
+    <p class="text-gray-400 text-sm font-medium">El carrito de la compra todavía está vacío.</p>
+    <a href="#" class="bg-[#ee2d3d] hover:bg-[#d42433] transition-colors text-white font-extrabold text-sm px-8 py-3 rounded-full shadow-sm">Comprar de inmediato</a>
+  </div>
+</div>
+
+<!-- ============ VIEW: MINE (profile) ============ -->
+<div id="view-mine" class="app-view hidden flex-1 flex flex-col bg-gray-50">
+  <div class="hero-grad text-white px-5 pt-5 pb-14 md:pb-16">
+    <div class="max-w-3xl mx-auto flex justify-between items-center mb-3">
+      <button data-open-view="home" aria-label="Volver a Home" class="w-8 h-8 -ml-1 flex items-center justify-center text-white/90 hover:text-white transition-colors">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </div>
+    <div class="max-w-3xl mx-auto flex items-center gap-4">
+      <div class="relative flex-shrink-0">
+        <div class="w-16 h-16 rounded-full overflow-hidden border-2 border-white/40 bg-white/20 flex items-center justify-center">
+          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <span class="absolute -bottom-1.5 left-1/2 -translate-x-1/2 bg-gray-800 text-amber-300 text-[9px] font-extrabold px-1.5 py-0.5 rounded">VIPO</span>
+      </div>
+      <div>
+        <p class="font-extrabold text-lg leading-tight">cunadeoro</p>
+        <p class="text-white/70 text-xs mt-0.5">ID: 1017740496</p>
+      </div>
+    </div>
+    <div class="max-w-3xl mx-auto flex items-center gap-10 mt-6">
+      <div>
+        <p class="text-xs text-white/70 font-medium">Equilibrio</p>
+        <p class="text-xl font-extrabold mt-0.5">¥67</p>
+        <p class="text-[11px] text-white/60">≈ $10.83</p>
+      </div>
+      <div>
+        <p class="text-xs text-white/70 font-medium">Cupón</p>
+        <p class="text-xl font-extrabold mt-0.5">34</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-3xl mx-auto w-full px-4 -mt-8 md:-mt-10 flex flex-col gap-4 pb-10">
+    <div class="bg-white rounded-2xl shadow-sm p-5">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-extrabold text-gray-800 text-sm">Orden</h3>
+        <a href="#" class="text-xs font-bold text-gray-400 flex items-center gap-1 hover:text-[#f0384a] transition-colors">Todos los pedidos
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg>
+        </a>
+      </div>
+      <div class="grid grid-cols-4 gap-y-5 text-center">
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="6" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Pendiente<br>de pago</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-green-50 text-green-500 flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 12h14M13 6l6 6-6 6"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Pendiente<br>de envío</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h4l3 3v4h-7z"/><circle cx="5.5" cy="19.5" r="1.5"/><circle cx="18.5" cy="19.5" r="1.5"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">A<br>almacenar</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Reembolso /<br>posventa</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-orange-50 text-orange-500 flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 10l9-7 9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Almacén</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h13l3 3v13H4z"/><path d="M8 4v6l3-2 3 2V4"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Ensayo</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-green-50 text-green-500 flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Paquete</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Colección</p></div>
+      </div>
+    </div>
+
+    <a href="#" class="bg-white rounded-2xl shadow-sm p-4 flex items-center gap-3 hover:bg-gray-50 transition-colors">
+      <span class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center flex-shrink-0">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 12v9H4v-9M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/></svg>
+      </span>
+      <span class="flex-1 text-sm font-bold text-gray-800">Filiales<span class="block text-xs font-medium text-gray-400 mt-0.5">Haga clic para ver los detalles de los ingresos</span></span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" stroke-width="2.5" class="flex-shrink-0"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+
+    <div class="bg-white rounded-2xl shadow-sm p-5">
+      <h3 class="font-extrabold text-gray-800 text-sm mb-4">Uso común</h3>
+      <div class="grid grid-cols-4 gap-y-4 text-center">
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s7-5.5 7-12a7 7 0 1 0-14 0c0 6.5 7 12 7 12z"/><circle cx="12" cy="10" r="2.5"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Dirección<br>de envío</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Centro de<br>atención</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-7h3zM3 19a2 2 0 0 0 2 2h1v-7H3z"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Centro de<br>ayuda</p></div>
+        <div class="flex flex-col items-center gap-1.5"><div class="w-9 h-9 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.59 13.41 12 22l-9-9V4h9l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7.5" cy="7.5" r="1"/></svg></div><p class="text-[11px] text-gray-600 font-medium leading-tight">Centro de<br>actividades</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ============ FLOATING (desktop) ============ -->
 <div class="hidden md:flex flex-col gap-3 fixed bottom-6 right-6 z-40">
   <a href="https://discord.gg/XAbKcnzmcX" target="_blank" rel="noopener noreferrer" aria-label="Discord" class="w-12 h-12 rounded-full bg-[#5865F2] shadow-lg flex items-center justify-center hover:scale-105 transition-transform">
@@ -427,12 +529,23 @@ window.addEventListener('scroll', function(){
 });
 backTop.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
 
-// Mobile tab bar (visual only)
-document.querySelectorAll('.tab-btn').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('text-[#f0384a]'); b.classList.add('text-gray-400'); });
-    btn.classList.remove('text-gray-400'); btn.classList.add('text-[#f0384a]');
+// Tab bar: switch view + active state
+function showView(name){
+  document.querySelectorAll('.app-view').forEach(function(v){ v.classList.add('hidden'); });
+  document.getElementById('view-' + name).classList.remove('hidden');
+  document.querySelectorAll('.tab-btn').forEach(function(b){
+    var active = b.getAttribute('data-tab') === name;
+    b.classList.toggle('text-[#f0384a]', active);
+    b.classList.toggle('text-gray-400', !active);
   });
+  window.scrollTo(0, 0);
+}
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){ showView(btn.getAttribute('data-tab')); });
+});
+// Desktop header cart/avatar icons also open their view
+document.querySelectorAll('[data-open-view]').forEach(function(el){
+  el.addEventListener('click', function(e){ e.preventDefault(); showView(el.getAttribute('data-open-view')); });
 });
 </script>
 </body>
