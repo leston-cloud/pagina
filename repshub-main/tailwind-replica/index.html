@@ -3,596 +3,398 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RepsHub — Spreadsheet (Réplica Tailwind)</title>
+<title>KakoBuy — Réplica Tailwind</title>
 
-<link rel="icon" type="image/png" href="../images/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
 <link rel="stylesheet" href="dist/tailwind.css">
 
 <style>
-  :root{
-    --bg:#080b13; --bg-card:#0b0f1a; --text:#ffffff; --text-muted:rgba(255,255,255,.55);
-    --border:rgba(255,255,255,.10); --header-bg:rgba(8,11,19,.75);
-  }
-  :root[data-theme="light"]{
-    --bg:#f7f7f8; --bg-card:#ffffff; --text:#0f0f10; --text-muted:rgba(15,15,16,.55);
-    --border:rgba(15,15,16,.10); --header-bg:rgba(255,255,255,.75);
-  }
   html{scroll-behavior:smooth;}
-  body{background:var(--bg); color:var(--text); transition:background .2s ease, color .2s ease;}
+  body{font-family:'Nunito',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;}
+  .hero-grad{ background: linear-gradient(180deg, #ff8a90 0%, #f0384a 100%); }
+  .brand-grad-btn{ background: linear-gradient(135deg, #ff6b76 0%, #f0384a 100%); }
 
-  @keyframes fade-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-  .anim-fade-up{animation:fade-up .7s ease both;}
+  @keyframes fadeSlide{ 0%{opacity:0; transform:translateY(6px);} 10%{opacity:1; transform:translateY(0);} 90%{opacity:1; transform:translateY(0);} 100%{opacity:0; transform:translateY(-6px);} }
+  .ticker-item{ display:none; animation: fadeSlide 4s ease forwards; }
+  .ticker-item.active{ display:block; }
 
-  @keyframes spin-magic{to{transform:rotate(360deg)}}
-  .magic-spin{animation:spin-magic 2.5s linear infinite;}
+  .banner-slide{ display:none; }
+  .banner-slide.active{ display:flex; }
 
-  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
-  .marquee-track{animation:marquee 35s linear infinite;}
-  .marquee-track:hover{animation-play-state:paused;}
+  .hide-scrollbar::-webkit-scrollbar{ display:none; }
+  .hide-scrollbar{ scrollbar-width:none; }
 
-  .hide-scrollbar::-webkit-scrollbar{display:none;}
-  .hide-scrollbar{scrollbar-width:none;}
-
-  .hero-dots{
-    background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
-    background-size: 28px 28px;
-    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
-    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
-  }
-  :root[data-theme="light"] .hero-dots{ background-image: radial-gradient(circle, rgba(0,0,0,.08) 1px, transparent 1px); }
-
-  .title-accent{
-    background: linear-gradient(135deg, #e8305a 0%, #f06292 100%);
-    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
-  }
-
-  .agent-avatar{ margin-left:-14px; border:3px solid var(--bg); transition: transform .25s ease, z-index 0s; }
-  .agent-avatar:first-child{ margin-left:0; }
-  .agent-avatar:hover{ transform: translateY(-4px); z-index:10; }
-
-  details.faq > summary{ list-style:none; cursor:pointer; }
-  details.faq > summary::-webkit-details-marker{ display:none; }
-  details.faq .faq-chevron{ transition: transform .2s ease; }
-  details.faq[open] .faq-chevron{ transform: rotate(180deg); }
-
-  .promo-card{ display:none; }
-  .promo-card.active{ display:flex; }
-
-  .switch-slider{ transition: transform .3s cubic-bezier(.25,1,.5,1); }
-
-  .config-panel{ transition: opacity .2s ease, visibility .2s ease; }
-  .config-panel-content{ transition: opacity .2s ease, transform .2s ease; transform-origin: top right; }
-
-  .pref-sub{ display:none; }
-  .pref-sub.active{ display:flex; }
-  .pref-check{ display:none; }
-  .pref-option.active .pref-check{ display:block; }
-
-  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-  .skel{ background: linear-gradient(90deg, rgba(255,255,255,.03) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.03) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; }
+  #topBanner.closed{ display:none; }
 </style>
 </head>
-<body class="font-sans antialiased flex flex-col min-h-screen">
+<body class="bg-gray-50 text-gray-800 antialiased flex flex-col min-h-screen pb-16 md:pb-0">
+
+<!-- ============ TOP PROMO BANNER ============ -->
+<div id="topBanner" class="relative bg-gradient-to-r from-amber-400 via-orange-400 to-amber-500 text-white text-center text-xs sm:text-sm font-extrabold py-2 px-10">
+  <span>🍂 SEPTEMBER SAVINGS ARE HERE! 🍁</span>
+  <button id="closeBanner" aria-label="Cerrar" class="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center rounded-full bg-black/10 hover:bg-black/20 transition-colors text-[11px]">✕</button>
+</div>
 
 <!-- ============ HEADER ============ -->
-<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md border-b" style="background:var(--header-bg); border-color:var(--border);">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6">
-    <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+<header class="hero-grad text-white sticky top-0 z-40 shadow-sm">
+  <!-- Top row: logo + search (mobile) -->
+  <div class="max-w-7xl mx-auto px-4 pt-3 pb-3 md:pt-4 md:pb-4">
+    <div class="flex items-center justify-between gap-3 md:gap-6">
+      <a href="#" class="flex items-center gap-1.5 flex-shrink-0">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M12 3 2 10.5V21h6.5v-6.5h7V21H22V10.5L12 3z"/></svg>
+        <span class="text-xl md:text-2xl font-extrabold tracking-tight">kakobuy</span>
+      </a>
 
-      <!-- Left: Logo + nav -->
-      <div class="flex items-center gap-8">
-        <a href="#" class="text-xl font-black tracking-tight" style="color:var(--text)">RepsHub</a>
-        <nav class="hidden md:flex items-center gap-6">
-          <a href="#productos" class="text-sm font-semibold hover:text-primary-light transition-colors" style="color:var(--text-muted)">Productos</a>
-          <a href="#" class="text-sm font-semibold hover:text-primary-light transition-colors" style="color:var(--text-muted)">Sellers</a>
-          <div class="relative" id="navDropdown">
-            <button type="button" id="navDropdownToggle" class="flex items-center gap-1 text-sm font-semibold hover:text-primary-light transition-colors" style="color:var(--text-muted)" aria-expanded="false">
-              <span>Más</span>
-              <svg id="navDropdownCaret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform"><polyline points="6 9 12 15 18 9"></polyline></svg>
-            </button>
-            <div id="navDropdownMenu" class="hidden absolute left-0 mt-3 w-52 rounded-xl border shadow-2xl p-2 flex-col gap-0.5" style="background:var(--bg-card); border-color:var(--border);">
-              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Cómo Comprar</a>
-              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Batches</a>
-              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Crypto</a>
-              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Calculadora de Impuestos</a>
-              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Estimador de Peso</a>
-              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Links</a>
-            </div>
-          </div>
-        </nav>
-      </div>
-
-      <!-- Center: search (desktop) -->
-      <form class="hidden lg:flex flex-1 max-w-md" role="search" onsubmit="return false;">
-        <label class="flex items-center gap-2 w-full rounded-xl border px-4 py-2.5 focus-within:border-primary/50 transition-colors" style="background:rgba(127,127,127,.06); border-color:var(--border);">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
-          <input type="search" placeholder="Buscar o pegar link..." class="flex-1 bg-transparent outline-none text-sm" style="color:var(--text)">
-          <kbd class="text-xs px-1.5 py-0.5 rounded border" style="color:var(--text-muted); border-color:var(--border);">⌘K</kbd>
+      <!-- Search (desktop inline) -->
+      <form class="hidden md:flex flex-1 max-w-xl" onsubmit="return false;">
+        <label class="flex items-center gap-2 w-full bg-white rounded-full px-4 py-2.5 shadow-inner">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f0384a" stroke-width="2.5" class="flex-shrink-0"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          <input type="search" placeholder="Taobao, tmall, 1688, jingdong, URLs de producto..." class="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f0384a" stroke-width="2" class="flex-shrink-0"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l2-3h4l2 3"/><circle cx="12" cy="14" r="3"/></svg>
         </label>
       </form>
 
-      <!-- Right: actions -->
-      <div class="flex items-center gap-2 md:gap-3">
-        <button id="configToggle" aria-label="Configuración" class="w-9 h-9 rounded-full flex items-center justify-center border transition-colors hover:bg-white/10" style="border-color:var(--border); color:var(--text)">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
-        </button>
-        <a href="#" class="hidden sm:inline-flex items-center bg-primary hover:bg-primary-dark text-white text-xs md:text-sm font-bold px-3 md:px-4 py-2 rounded-full transition-colors">
-          <span class="hidden md:inline">KakoBuy&nbsp;</span>Registrarse
+      <!-- Right cluster (desktop) -->
+      <div class="hidden md:flex items-center gap-4 text-sm font-semibold flex-shrink-0">
+        <a href="#" class="flex items-center gap-1 hover:text-white/80 transition-colors">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          Estimación
         </a>
-        <button id="mobileMenuToggle" aria-label="Alternar menú" class="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5">
-          <span class="block w-5 h-0.5 bg-current transition-transform"></span>
-          <span class="block w-5 h-0.5 bg-current transition-opacity"></span>
-          <span class="block w-5 h-0.5 bg-current transition-transform"></span>
+        <span class="opacity-40">/</span>
+        <button class="flex items-center gap-1.5 bg-white/15 hover:bg-white/25 transition-colors px-3 py-1.5 rounded-full">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+          Español / USD
+        </button>
+        <a href="#" class="relative">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <span class="absolute -top-1.5 -right-1.5 bg-white text-[#f0384a] text-[10px] font-extrabold w-4 h-4 rounded-full flex items-center justify-center">0</span>
+        </a>
+        <button class="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center overflow-hidden">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         </button>
       </div>
+
+      <!-- Right cluster (mobile) -->
+      <button class="md:hidden flex items-center gap-1 bg-white/15 px-2.5 py-1.5 rounded-full text-xs font-bold flex-shrink-0">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20 15 15 0 0 1 0-20z"/></svg>
+        En
+      </button>
     </div>
 
-    <!-- Mobile nav -->
-    <nav id="mobileNav" class="hidden md:hidden pb-4 flex flex-col gap-1 border-t pt-3" style="border-color:var(--border);">
-      <a href="#productos" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Productos</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Sellers</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Cómo Comprar</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Batches</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Crypto</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Calculadora de Impuestos</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Estimador de Peso</a>
-      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Links</a>
-      <a href="#" class="mt-2 inline-flex justify-center bg-primary text-white text-sm font-bold px-4 py-2.5 rounded-full">Registrarse en KakoBuy</a>
-    </nav>
+    <!-- Search (mobile, own row) -->
+    <form class="md:hidden mt-3" onsubmit="return false;">
+      <label class="flex items-center gap-2 w-full bg-white rounded-full px-4 py-3 shadow-inner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f0384a" stroke-width="2.5" class="flex-shrink-0"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+        <input type="search" placeholder="Taobao, tmall, 1688, jingdong, URLs de producto..." class="flex-1 outline-none text-sm text-gray-700 placeholder:text-gray-400 min-w-0">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0384a" stroke-width="2" class="flex-shrink-0"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7l2-3h4l2 3"/><circle cx="12" cy="14" r="3"/></svg>
+      </label>
+    </form>
   </div>
+
+  <!-- Secondary nav (desktop only) -->
+  <nav class="hidden md:block border-t border-white/15">
+    <div class="max-w-7xl mx-auto px-4 flex items-center gap-8 text-sm font-bold h-11">
+      <a href="#" class="border-b-2 border-white h-full flex items-center">Casa</a>
+      <a href="#" class="text-white/80 hover:text-white transition-colors">Agente de compras</a>
+      <a href="#" class="text-white/80 hover:text-white transition-colors">Reenvío</a>
+      <a href="#" class="text-white/80 hover:text-white transition-colors">Rellenar y comprar</a>
+    </div>
+  </nav>
 </header>
 
-<main class="flex-1 pt-16 md:pt-20">
+<main class="flex-1">
 
-  <!-- ============ HERO ============ -->
-  <section class="relative overflow-hidden text-center pt-16 pb-12 md:pt-24 md:pb-16">
-    <div class="absolute inset-0 z-0 pointer-events-none">
-      <div class="absolute inset-0" style="background:
-        radial-gradient(ellipse 120% 60% at 50% -10%, rgba(220,38,38,.18) 0%, transparent 70%),
-        radial-gradient(ellipse 80% 50% at 20% 80%, rgba(220,38,38,.06) 0%, transparent 60%),
-        radial-gradient(ellipse 80% 50% at 80% 60%, rgba(180,28,28,.06) 0%, transparent 60%);"></div>
-      <div class="absolute inset-0 hero-dots"></div>
+  <!-- ============ QUICK ACTIONS ============ -->
+  <section class="max-w-7xl mx-auto px-4 -mt-1 md:mt-6 relative z-10">
+    <div class="grid grid-cols-4 gap-2.5 md:gap-4 py-4 md:py-0">
+      <a href="#" class="flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 md:p-5 text-white text-center shadow-md" style="background:linear-gradient(135deg, var(--color-kk-orange-light) 0%, var(--color-kk-orange) 100%);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><path d="M4 19V6a2 2 0 0 1 2-2h5l2 2h7a1 1 0 0 1 1 1v3"/><path d="M4 19h16"/><path d="M9 19v-4h4v4"/></svg>
+        <span class="text-[11px] md:text-sm font-bold leading-tight">Guía para novatos</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 md:p-5 text-white text-center shadow-md" style="background:linear-gradient(135deg, var(--color-kk-indigo-light) 0%, var(--color-kk-indigo) 100%);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h2M12 10h2M16 10h0M8 14h2M12 14h2M16 14h0M8 18h2"/></svg>
+        <span class="text-[11px] md:text-sm font-bold leading-tight">Estimación</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 md:p-5 text-white text-center shadow-md" style="background:linear-gradient(135deg, var(--color-kk-amber-light) 0%, var(--color-kk-amber) 100%);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><rect x="1" y="7" width="15" height="10" rx="1"/><path d="M16 10h4l3 3v4h-7z"/><circle cx="5.5" cy="19.5" r="1.5"/><circle cx="18.5" cy="19.5" r="1.5"/></svg>
+        <span class="text-[11px] md:text-sm font-bold leading-tight">Rellenar y comprar</span>
+      </a>
+      <a href="#" class="flex flex-col items-center justify-center gap-1.5 rounded-2xl p-3 md:p-5 text-white text-center shadow-md" style="background:linear-gradient(135deg, var(--color-kk-peach-light) 0%, var(--color-kk-peach) 100%);">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.6"><path d="M4 4h13l3 3v13H4z"/><path d="M8 4v6l3-2 3 2V4"/></svg>
+        <span class="text-[11px] md:text-sm font-bold leading-tight">Orden de transferencia</span>
+      </a>
     </div>
+  </section>
 
-    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-5 md:gap-6">
-      <div class="anim-fade-up inline-flex items-center gap-2 text-xs md:text-sm font-semibold px-3.5 py-1.5 rounded-full border" style="background:rgba(220,38,38,.1); border-color:rgba(220,38,38,.3); color:rgba(255,255,255,.85); animation-delay:.1s;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
-        <span>+1,500 productos en el catálogo</span>
+  <!-- ============ HERO SLOGAN + STEPS (desktop emphasis) ============ -->
+  <section class="max-w-7xl mx-auto px-4 pt-2 pb-6 hidden md:block">
+    <p class="text-center text-2xl font-extrabold text-gray-700">Comprar productos chinos, enviar a todo el mundo</p>
+  </section>
+
+  <!-- ============ BANNER CAROUSEL ============ -->
+  <section class="max-w-7xl mx-auto px-4 mt-2 md:mt-0">
+    <div id="bannerCarousel" class="relative rounded-2xl overflow-hidden shadow-md h-40 sm:h-48 md:h-56">
+      <div class="banner-slide active w-full h-full items-center justify-center relative overflow-hidden" style="background:linear-gradient(120deg,#8ec5fc 0%,#e0c3fc 100%);">
+        <div class="text-center px-4">
+          <p class="text-2xl sm:text-3xl md:text-4xl font-black text-[#1e3a8a] drop-shadow-sm leading-tight">Sitewide Shipping<br>Discount</p>
+        </div>
+        <span class="absolute text-4xl left-6 top-6 opacity-70">✈️</span>
+        <span class="absolute text-4xl right-8 bottom-6 opacity-70">📦</span>
       </div>
-
-      <h1 class="anim-fade-up font-black leading-none tracking-tight" style="font-size:clamp(2.75rem,10vw,6.5rem); letter-spacing:-.04em; animation-delay:.2s;">
-        RepsHub <span class="title-accent">— Spreadsheet</span>
-      </h1>
-
-      <p class="anim-fade-up max-w-md text-sm md:text-base leading-relaxed" style="color:var(--text-muted); animation-delay:.35s;">
-        Explorá nuestro spreadsheet con los mejores finds de agentes como KakoBuy, Hubbuy y más. Info detallada, fotos QC, tracking de envíos y links directos.
-      </p>
-
-      <div class="anim-fade-up flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center" style="animation-delay:.45s;">
-        <a href="#productos" class="relative inline-flex h-[50px] overflow-hidden rounded-full p-[1px] shadow-lg hover:-translate-y-0.5 transition-transform">
-          <span class="magic-spin absolute -inset-[500%]" style="background: conic-gradient(from 90deg at 50% 50%, #E2CBFF 0%, #393BB2 50%, #E2CBFF 100%);"></span>
-          <span class="relative inline-flex items-center justify-center w-full h-full rounded-full px-6 text-sm font-bold gap-2" style="background:#0b0f1a; color:#fff;">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-            Explorar Productos
-          </span>
-        </a>
-        <a href="#" class="inline-flex items-center justify-center gap-2 text-sm font-bold px-6 py-3.5 rounded-full border transition-colors hover:bg-white/10" style="background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.14); color:#fff;">
-          Cómo Comprar
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+      <div class="banner-slide w-full h-full items-center justify-center" style="background:linear-gradient(120deg, var(--color-kk-peach-light) 0%, var(--color-brand) 100%);">
+        <p class="text-2xl sm:text-3xl md:text-4xl font-black text-white text-center px-4">New Users Get<br>$410 Coupons</p>
       </div>
+      <div class="banner-slide w-full h-full items-center justify-center" style="background:linear-gradient(120deg, var(--color-kk-amber-light) 0%, var(--color-kk-orange) 100%);">
+        <p class="text-2xl sm:text-3xl md:text-4xl font-black text-white text-center px-4">EU Duty-Free<br>Shipping Lines</p>
+      </div>
+      <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5" id="bannerDots">
+        <button class="w-2 h-2 rounded-full bg-white/60 banner-dot active" data-idx="0"></button>
+        <button class="w-2 h-2 rounded-full bg-white/60 banner-dot" data-idx="1"></button>
+        <button class="w-2 h-2 rounded-full bg-white/60 banner-dot" data-idx="2"></button>
+      </div>
+    </div>
+  </section>
 
-      <div class="anim-fade-up flex items-center gap-3" style="animation-delay:.55s;">
-        <div class="flex items-center">
-          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/oopbuylogo.png" alt="OopBuy" class="w-full h-full object-cover"></div>
-          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/kakobuylogo.png" alt="KakoBuy" class="w-full h-full object-contain scale-90"></div>
-          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden shadow-lg" style="background:#111;"><img src="../images/hubbuy-logo.png" alt="Hubbuy" class="w-full h-full object-contain scale-75"></div>
-          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/cssbuy%20logo.png" alt="CssBuy" class="w-full h-full object-contain scale-90"></div>
-          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/Litbuy_logo.png" alt="LitBuy" class="w-full h-full object-contain scale-90"></div>
-          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center shadow-lg relative" style="background:linear-gradient(135deg,#450a0a 0%,#7f1d1d 100%);">
-            <span class="text-white text-sm font-extrabold" style="text-shadow:0 0 10px rgba(255,255,255,.3)">+12</span>
+  <!-- ============ LATEST NEWS TICKER ============ -->
+  <section class="max-w-7xl mx-auto px-4 mt-4">
+    <div class="bg-red-50 border border-red-100 rounded-2xl px-4 sm:px-5 py-3 flex items-center gap-3 sm:gap-4">
+      <span class="flex-shrink-0 font-extrabold text-[#f0384a] text-sm sm:text-base leading-tight">LATEST <br class="sm:hidden">NEWS</span>
+      <span class="w-px self-stretch bg-red-200 flex-shrink-0"></span>
+      <div id="newsTicker" class="relative flex-1 h-5 overflow-hidden text-sm text-gray-600 font-medium">
+        <span class="ticker-item active">🍂 SEPTEMBER SAVINGS ARE HERE! 🍁</span>
+        <span class="ticker-item">New users sign up and get $410 coupons!</span>
+        <span class="ticker-item">📦 EU Duty-Free Shipping Lines Update — Duty-Free Shipping Continues</span>
+        <span class="ticker-item">📦 EU Category-Based Customs Fees: Pay Only €3 Per Parcel with Kakobuy</span>
+        <span class="ticker-item">Kakobuy provides tax-free routes for American users</span>
+      </div>
+      <a href="#" class="flex-shrink-0 text-xs sm:text-sm font-bold text-[#f0384a] flex items-center gap-1">Más
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M9 18l6-6-6-6"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ TUTORIAL / STEPS ============ -->
+  <section class="max-w-7xl mx-auto px-4 mt-5">
+    <div class="bg-white rounded-2xl shadow-sm p-5 sm:p-6">
+      <h2 class="text-gray-400 font-extrabold text-xs tracking-widest uppercase mb-4">Tutorial</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-2 items-start">
+        <div class="flex sm:flex-col items-center gap-4 sm:gap-2 sm:text-center">
+          <div class="w-12 h-12 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center flex-shrink-0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-800 text-sm">Paso 1 · Hacer un pedido</p>
+            <p class="text-xs text-gray-500 mt-0.5">Seleccionar productos y hacer pedidos</p>
+            <a href="#" class="text-xs font-bold text-[#f0384a]">Tutorial de consulta</a>
           </div>
         </div>
-        <span class="text-sm font-medium" style="color:var(--text-muted)">17 agentes soportados</span>
-      </div>
-
-      <!-- Promo carousel -->
-      <div class="anim-fade-up w-full max-w-md" id="promoCarousel" style="animation-delay:.75s;">
-        <div class="promo-card active flex-col gap-3 rounded-[20px] border p-5 backdrop-blur-md relative overflow-hidden" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1);">
-          <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5">
-              <img src="../images/kakobuylogo.png" alt="KakoBuy" class="w-9 h-9 rounded-[10px] object-contain bg-white p-0.5">
-              <div>
-                <div class="text-sm font-extrabold text-white leading-none">KAKOBUY</div>
-                <div class="text-xs mt-1" style="color:rgba(255,255,255,.5)">Agente #1 en Latam</div>
-              </div>
-            </div>
-            <span class="text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full border" style="background:rgba(220,38,38,.15); color:#ef4444; border-color:rgba(220,38,38,.3);">Recomendado</span>
+        <div class="hidden sm:flex items-center justify-center text-gray-300 self-center -mx-2">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 5l7 7-7 7M5 5l7 7-7 7"/></svg>
+        </div>
+        <div class="flex sm:flex-col items-center gap-4 sm:gap-2 sm:text-center">
+          <div class="w-12 h-12 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center flex-shrink-0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/></svg>
           </div>
-          <p class="text-sm" style="color:rgba(255,255,255,.75)">Obtén $410 en cupones + $15 extra con el código <strong>"gonza"</strong></p>
-          <a href="#" class="self-start inline-flex items-center gap-1 bg-white text-black text-xs font-extrabold uppercase tracking-wide px-4 py-2 rounded-full hover:bg-gray-100 transition-colors">Reclamar</a>
-        </div>
-
-        <div class="promo-card flex-col gap-3 rounded-[20px] border p-5 backdrop-blur-md relative overflow-hidden" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1);">
-          <div class="flex items-center justify-between gap-3">
-            <div class="flex items-center gap-2.5">
-              <div class="w-9 h-9 rounded-[10px] flex items-center justify-center flex-shrink-0" style="background:#5865F2;">
-                <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="#fff"><path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg>
-              </div>
-              <div>
-                <div class="text-sm font-extrabold text-white leading-none">DISCORD</div>
-                <div class="text-xs mt-1" style="color:rgba(255,255,255,.5)">Comunidad RepsHub</div>
-              </div>
-            </div>
-            <span class="text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full border" style="background:rgba(34,197,94,.15); color:#4ade80; border-color:rgba(34,197,94,.3);">Gratis</span>
+          <div>
+            <p class="font-bold text-gray-800 text-sm">Paso 2 · Bolsa de recogida</p>
+            <p class="text-xs text-gray-500 mt-0.5">Revisar el paquete</p>
+            <a href="#" class="text-xs font-bold text-[#f0384a]">Tutorial de consulta</a>
           </div>
-          <p class="text-sm" style="color:rgba(255,255,255,.75)">Unite a nuestra comunidad. Finds exclusivos, reviews y soporte en tiempo real.</p>
-          <a href="#" class="self-start inline-flex items-center gap-1 bg-white text-black text-xs font-extrabold uppercase tracking-wide px-4 py-2 rounded-full hover:bg-gray-100 transition-colors">Unirme</a>
-        </div>
-
-        <div class="flex justify-center gap-2 pt-3" id="promoDots">
-          <button class="promo-dot w-1.5 h-1.5 rounded-full bg-white transition-transform scale-125" data-idx="0" aria-label="Slide 1"></button>
-          <button class="promo-dot w-1.5 h-1.5 rounded-full bg-white/25" data-idx="1" aria-label="Slide 2"></button>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ============ FEATURED PRODUCTS ============ -->
-  <section id="productos" class="py-10 md:py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl md:text-2xl font-extrabold">Productos Destacados</h2>
-        <a href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-light hover:gap-2.5 transition-all">
-          Ver Productos
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-      </div>
-      <div id="featuredGrid" class="flex lg:grid lg:grid-cols-5 gap-4 md:gap-5 overflow-x-auto hide-scrollbar pb-2"></div>
-    </div>
-  </section>
-
-  <!-- ============ CATEGORIES ============ -->
-  <section class="py-10 md:py-12">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <h2 class="text-xl md:text-2xl font-extrabold mb-6">Categorías</h2>
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18h18M5.5 18v-3a2 2 0 012-2h1l2-3h3l2 3h1a2 2 0 012 2v3"/></svg></div>
-          <h3 class="font-bold">Calzado</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Sneakers, runners y los pares que más se buscan.</p>
-        </a>
-        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.5 2H8.5L3 7v8l3 1V22h12v-6l3-1V7l-5.5-5z"/></svg></div>
-          <h3 class="font-bold">Ropa Superior</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Remeras, hoodies, sweaters y outerwear.</p>
-        </a>
-        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2h12l-1 10-3 10h-4L7 12 6 2z"/></svg></div>
-          <h3 class="font-bold">Ropa Inferior</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Joggers, jeans, shorts y pantalones.</p>
-        </a>
-        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg></div>
-          <h3 class="font-bold">Accesorios</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Bolsos, lentes, belts y detalles para el haul.</p>
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ TOOLS ============ -->
-  <section class="py-12 md:py-16 border-y" style="background:rgba(127,127,127,.02); border-color:var(--border);">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6">
-      <div class="text-center mb-10">
-        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest mb-2" style="color:#ef4444;">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          Herramientas
-        </span>
-        <h2 class="text-2xl md:text-4xl font-black">RepsHub <em class="not-italic" style="color:#e8305a;">Tools</em></h2>
-        <p class="mt-2 text-sm md:text-base" style="color:var(--text-muted)">Herramientas gratuitas para simplificar tus compras desde China.</p>
-      </div>
-
-      <div class="flex flex-wrap justify-center gap-4 md:gap-5 mb-10">
-        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-          <h3 class="font-bold text-sm">Batches</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Compará versiones de zapatillas y entendé qué batch elegir.</p>
-        </a>
-        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9 12h6M12 9v6"/></svg></div>
-          <h3 class="font-bold text-sm">Crypto</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Aprendé a fondear saldo con crypto y evitá errores de red.</p>
-        </a>
-        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8M8 14h4"/></svg></div>
-          <h3 class="font-bold text-sm">Calculadora</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Estimá impuestos y costos totales antes de avanzar.</p>
-        </a>
-        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 8l4-4 4 4M12 4v16M4 14v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg></div>
-          <h3 class="font-bold text-sm">Estimador de Peso</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Calcula el peso físico aproximado de tu paquete al enviar.</p>
-        </a>
-        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
-          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <h3 class="font-bold text-sm">Sellers</h3>
-          <p class="text-sm" style="color:var(--text-muted)">Vendedores confiables verificados para explorar mejores links.</p>
-        </a>
-      </div>
-
-      <h3 class="font-extrabold mb-4">¿Por qué RepsHub Tools?</h3>
-      <div class="grid sm:grid-cols-3 gap-4">
-        <div class="p-5 rounded-xl" style="background:rgba(127,127,127,.05);">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:rgba(34,197,94,.12); color:#22c55e;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-          <h4 class="font-bold text-sm mb-1">Gratis siempre</h4>
-          <p class="text-xs" style="color:var(--text-muted)">Todas las herramientas son completamente gratis, sin registro.</p>
-        </div>
-        <div class="p-5 rounded-xl" style="background:rgba(127,127,127,.05);">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:rgba(59,130,246,.12); color:#3b82f6;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
-          <h4 class="font-bold text-sm mb-1">Rápido y confiable</h4>
-          <p class="text-xs" style="color:var(--text-muted)">Resultados instantáneos con datos precisos y actualizados.</p>
-        </div>
-        <div class="p-5 rounded-xl" style="background:rgba(127,127,127,.05);">
-          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:rgba(168,85,247,.12); color:#a855f7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-          <h4 class="font-bold text-sm mb-1">Fácil de usar</h4>
-          <p class="text-xs" style="color:var(--text-muted)">Interfaz intuitiva, sin conocimientos técnicos necesarios.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 sm:gap-2 items-start mt-5 sm:mt-4">
+        <div class="flex sm:flex-col items-center gap-4 sm:gap-2 sm:text-center">
+          <div class="w-12 h-12 rounded-full bg-red-50 text-[#f0384a] flex items-center justify-center flex-shrink-0">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h13l3 3v13H4z"/><path d="M9 20v-6h6v6"/></svg>
+          </div>
+          <div>
+            <p class="font-bold text-gray-800 text-sm">Paso 3 · Recogida</p>
+            <p class="text-xs text-gray-500 mt-0.5">Firmar el paquete</p>
+            <a href="#" class="text-xs font-bold text-[#f0384a]">Tutorial de consulta</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ FAQ ============ -->
-  <section class="py-12 md:py-16">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-3 gap-8 md:gap-12 items-start">
-      <div class="md:col-span-1">
-        <h2 class="text-2xl md:text-3xl font-black leading-tight">Preguntas<br>Frecuentes</h2>
+  <p class="text-center text-gray-400 font-semibold text-sm mt-6">Todo el mundo está comprando</p>
+
+  <!-- ============ SOLUCIONES ============ -->
+  <section class="max-w-7xl mx-auto px-4 mt-6 md:mt-10">
+    <h2 class="text-center text-xl md:text-2xl font-extrabold text-gray-800">Soluciones de integración profesional</h2>
+    <p class="text-center text-sm text-gray-500 mt-1.5 max-w-lg mx-auto">Esfuérzate por satisfacer la demanda de la industria y los precios son más preferenciales.</p>
+
+    <div class="grid sm:grid-cols-3 gap-4 mt-6">
+      <div class="rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 flex flex-col">
+        <div class="h-32 flex items-center justify-center text-white text-3xl font-black" style="background:linear-gradient(135deg,#ffd66b,#ff9142);">购</div>
+        <div class="p-4 flex flex-col gap-2 flex-1">
+          <h3 class="font-bold text-gray-800 text-sm">Adquisición de plataformas nacionales</h3>
+          <p class="text-xs text-gray-500 flex-1">Taobao / 1688 / Jingdong</p>
+          <a href="#" class="self-start text-xs font-bold text-white bg-[#f0384a] px-4 py-2 rounded-full">Compras</a>
+        </div>
       </div>
-      <div class="md:col-span-2 flex flex-col">
-        <details class="faq border-b py-1" style="border-color:var(--border);" open>
-          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
-            ¿Qué es RepsHub?
-            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">RepsHub organiza un catálogo curado con más de 1,500 productos réplicas 1:1 desde China con enlaces directos a Taobao, Weidian y 1688.</p>
-        </details>
-        <details class="faq border-b py-1" style="border-color:var(--border);">
-          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
-            ¿Cómo uso el catálogo?
-            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">Navegá por categorías, buscá por marca o producto, y hacé click en el enlace directo para comprarlo a través de un agente.</p>
-        </details>
-        <details class="faq border-b py-1" style="border-color:var(--border);">
-          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
-            ¿Qué agentes soporta RepsHub?
-            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">Soportamos varios agentes: KakoBuy, Hubbuy, MuleBuy, CssBuy, OopBuy y LitBuy.</p>
-        </details>
-        <details class="faq border-b py-1" style="border-color:var(--border);">
-          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
-            ¿Cómo funciona la calculadora?
-            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">La calculadora estima costos totales incluyendo envío, impuestos y tasas aduaneras para Argentina.</p>
-        </details>
-        <details class="faq border-b py-1" style="border-color:var(--border);">
-          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
-            ¿RepsHub es gratis?
-            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
-          </summary>
-          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">Sí, 100% gratuito. Catálogo, herramientas y guías sin costo ni registro.</p>
-        </details>
+      <div class="rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 flex flex-col">
+        <div class="h-32 flex items-center justify-center text-white text-3xl font-black" style="background:linear-gradient(135deg,#9089fc,#5b5fef);">🚢</div>
+        <div class="p-4 flex flex-col gap-2 flex-1">
+          <h3 class="font-bold text-gray-800 text-sm">Excelentes servicios globales de transbordo</h3>
+          <p class="text-xs text-gray-500 flex-1">10 años de operación multicanal. Un precio razonable, no te preocupes por el servicio.</p>
+          <a href="#" class="self-start text-xs font-bold text-white bg-[#f0384a] px-4 py-2 rounded-full">Transbordo</a>
+        </div>
+      </div>
+      <div class="rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-100 flex flex-col">
+        <div class="h-32 flex items-center justify-center text-white text-3xl font-black" style="background:linear-gradient(135deg,#ff9a8b,#f0384a);">🎁</div>
+        <div class="p-4 flex flex-col gap-2 flex-1">
+          <h3 class="font-bold text-gray-800 text-sm">¡Los recién llegados obtienen $105 de regalo!</h3>
+          <p class="text-xs text-gray-500 flex-1">Menos compras y transferencias más asequibles.</p>
+          <a href="#" class="self-start text-xs font-bold text-white bg-[#f0384a] px-4 py-2 rounded-full">Ahorrar dinero</a>
+        </div>
       </div>
     </div>
   </section>
+
+  <!-- ============ SERVICE LIST ============ -->
+  <section class="max-w-7xl mx-auto px-4 mt-10 md:mt-14">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
+      <div class="text-center flex flex-col items-center gap-2.5">
+        <div class="w-14 h-14 rounded-2xl bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M6 2h12l2 5v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7z"/><path d="M4 7h16M9 11a3 3 0 0 0 6 0"/></svg></div>
+        <p class="font-bold text-sm text-gray-800">Orden de compra</p>
+        <p class="text-xs text-gray-500 leading-relaxed">El equipo de agentes de kakobuy compra por vos pegando el enlace del producto.</p>
+      </div>
+      <div class="text-center flex flex-col items-center gap-2.5">
+        <div class="w-14 h-14 rounded-2xl bg-indigo-50 text-[#5b5fef] flex items-center justify-center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M3 21V8l9-5 9 5v13"/><path d="M9 21v-6h6v6"/></svg></div>
+        <p class="font-bold text-sm text-gray-800">Almacén del destinatario</p>
+        <p class="text-xs text-gray-500 leading-relaxed">Compra a distintos vendedores y recibí todo en el almacén de kakobuy en China.</p>
+      </div>
+      <div class="text-center flex flex-col items-center gap-2.5">
+        <div class="w-14 h-14 rounded-2xl bg-amber-50 text-[#ff9142] flex items-center justify-center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></div>
+        <p class="font-bold text-sm text-gray-800">Inspección de calidad</p>
+        <p class="text-xs text-gray-500 leading-relaxed">QC de defectos, dimensiones y colores con garantía de servicio post-venta.</p>
+      </div>
+      <div class="text-center flex flex-col items-center gap-2.5">
+        <div class="w-14 h-14 rounded-2xl bg-red-50 text-[#f0384a] flex items-center justify-center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M2 16l3-9h5l3 9M14 16h8M2 16h20"/><circle cx="7" cy="19" r="1.6"/><circle cx="18" cy="19" r="1.6"/></svg></div>
+        <p class="font-bold text-sm text-gray-800">Transporte Marítimo Mundial</p>
+        <p class="text-xs text-gray-500 leading-relaxed">Elegí tu proveedor logístico y enviá tu paquete a casa con confianza.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="mt-12 md:mt-16 bg-white border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-4 py-10 grid grid-cols-2 md:grid-cols-6 gap-8">
+      <div>
+        <h4 class="text-xs font-extrabold uppercase tracking-wide text-gray-400 mb-3">Customer Service</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-600 font-medium">
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Contact us</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">About us</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Help Center</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold uppercase tracking-wide text-gray-400 mb-3">Shopping Agent Guidance</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-600 font-medium">
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Tutorial</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Services &amp; Fees</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Returns and Refunds</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold uppercase tracking-wide text-gray-400 mb-3">Payment</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-600 font-medium">
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Recharge method</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Paypal</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">International card</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold uppercase tracking-wide text-gray-400 mb-3">Delivery</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-600 font-medium">
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Charges</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Customs &amp; taxes</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Receipt Information</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-extrabold uppercase tracking-wide text-gray-400 mb-3">After Sales</h4>
+        <ul class="flex flex-col gap-2 text-sm text-gray-600 font-medium">
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Storage</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Inspection Info</a></li>
+          <li><a href="#" class="hover:text-[#f0384a] transition-colors">Anti-Counterfeiting</a></li>
+        </ul>
+      </div>
+      <div class="col-span-2 md:col-span-1 flex flex-col gap-3">
+        <div class="flex items-center gap-1.5 text-[#f0384a] font-extrabold text-lg">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#f0384a"><path d="M12 3 2 10.5V21h6.5v-6.5h7V21H22V10.5L12 3z"/></svg>
+          kakobuy
+        </div>
+        <a href="#" class="inline-flex items-center gap-1.5 border border-gray-200 rounded-lg px-3 py-2 text-xs font-bold text-gray-700 hover:border-gray-300 transition-colors w-fit">🍎 App Store</a>
+        <a href="#" class="inline-flex items-center gap-1.5 border border-gray-200 rounded-lg px-3 py-2 text-xs font-bold text-gray-700 hover:border-gray-300 transition-colors w-fit">▶ Google Play</a>
+      </div>
+    </div>
+    <div class="border-t border-gray-100">
+      <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-gray-400 font-medium">
+        <p>© 2022-2026 kakobuy</p>
+        <div class="flex flex-wrap justify-center gap-x-4 gap-y-1">
+          <a href="#" class="hover:text-[#f0384a] transition-colors">About Kakobuy</a>
+          <a href="#" class="hover:text-[#f0384a] transition-colors">Terms</a>
+          <a href="#" class="hover:text-[#f0384a] transition-colors">Privacy Policy</a>
+          <a href="#" class="hover:text-[#f0384a] transition-colors">Return Policy</a>
+          <a href="#" class="hover:text-[#f0384a] transition-colors">Contact Us</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </main>
 
-<!-- ============ FLOATING ACTIONS ============ -->
-<div class="fixed bottom-5 right-5 z-[9999] flex items-end gap-3">
-  <div class="flex flex-col items-center gap-2 group">
-    <div class="opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all text-xs font-semibold text-white px-3 py-1.5 rounded-lg pointer-events-none" style="background:rgba(10,10,20,.92);">Agente Rápido</div>
-    <div id="agentQuickSwitch" class="relative flex items-center gap-0.5 h-[52px] p-1 rounded-2xl border backdrop-blur-md shadow-xl" style="background:rgba(15,15,27,.85); border-color:rgba(255,255,255,.15);" data-active="">
-      <div id="switchSlider" class="switch-slider absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl opacity-0" style="background:#dc2626; box-shadow:0 2px 10px rgba(220,38,38,.45);"></div>
-      <button class="switch-option relative z-10 flex items-center gap-1.5 h-full px-3 rounded-xl text-xs font-bold text-white/50 transition-colors" data-agent="LitBuy" aria-label="Seleccionar LitBuy">
-        <img src="../images/Litbuy_logo.png" alt="LitBuy" class="w-[18px] h-[18px] object-contain rounded-sm"><span>Lit</span>
-      </button>
-      <button class="switch-option relative z-10 flex items-center gap-1.5 h-full px-3 rounded-xl text-xs font-bold text-white/50 transition-colors" data-agent="KakoBuy" aria-label="Seleccionar KakoBuy">
-        <img src="../images/kakobuylogo.png" alt="KakoBuy" class="w-[18px] h-[18px] object-contain rounded-sm"><span>Kako</span>
-      </button>
-    </div>
-  </div>
-
-  <div class="flex flex-col items-end gap-2 group">
-    <div class="opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all text-xs font-semibold text-white px-3 py-1.5 rounded-lg pointer-events-none" style="background:rgba(10,10,20,.92);">Unirse al Discord</div>
-    <a href="#" aria-label="Unirse al Discord de RepsHub" class="w-[52px] h-[52px] rounded-2xl flex items-center justify-center shadow-xl transition-all hover:scale-105 hover:-translate-y-0.5" style="background:#5865F2;">
-      <svg width="26" height="26" viewBox="0 0 127.14 96.36" fill="#fff"><path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg>
-    </a>
-  </div>
+<!-- ============ FLOATING (desktop) ============ -->
+<div class="hidden md:flex flex-col gap-3 fixed bottom-6 right-6 z-40">
+  <a href="https://discord.gg/XAbKcnzmcX" target="_blank" rel="noopener noreferrer" aria-label="Discord" class="w-12 h-12 rounded-full bg-[#5865F2] shadow-lg flex items-center justify-center hover:scale-105 transition-transform">
+    <svg width="22" height="22" viewBox="0 0 127.14 96.36" fill="#fff"><path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg>
+  </a>
+  <button id="backTop" aria-label="Volver arriba" class="w-12 h-12 rounded-full bg-white border border-gray-200 shadow-lg flex items-center justify-center text-[#f0384a] opacity-0 pointer-events-none transition-opacity">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
+  </button>
 </div>
 
-<!-- ============ CONFIG PANEL ============ -->
-<div id="configPanel" class="config-panel fixed top-[70px] right-4 z-[10000] opacity-0 invisible pointer-events-none">
-  <div class="config-panel-content w-[260px] rounded-xl border p-2 opacity-0 -translate-y-2 scale-95 shadow-2xl" style="background:#1c1c1c; border-color:rgba(255,255,255,.08);">
-    <div class="pref-main flex flex-col" id="prefMain">
-      <div class="px-3 py-2 text-xs font-semibold" style="color:rgba(255,255,255,.5)">Preferences</div>
-      <button class="pref-row flex items-center justify-between w-full h-10 px-3 rounded-md text-white text-sm font-medium hover:bg-white/10 transition-colors" data-pref-target="prefTheme">
-        <span>Tema</span>
-        <span class="flex items-center gap-1.5 text-[13px]" style="color:rgba(255,255,255,.7)">
-          <span id="currentThemeLabel">🌙 Oscuro</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </button>
-      <button class="pref-row flex items-center justify-between w-full h-10 px-3 rounded-md text-white text-sm font-medium hover:bg-white/10 transition-colors" data-pref-target="prefAgent">
-        <span>Agent</span>
-        <span class="flex items-center gap-1.5 text-[13px]" style="color:rgba(255,255,255,.7)">
-          <img id="currentAgentIcon" src="../images/kakobuylogo.png" class="w-4 h-4 rounded-sm object-contain">
-          <span id="currentAgentLabel">KakoBuy</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </button>
-      <button class="pref-row flex items-center justify-between w-full h-10 px-3 rounded-md text-white text-sm font-medium hover:bg-white/10 transition-colors" data-pref-target="prefCurrency">
-        <span>Moneda</span>
-        <span class="flex items-center gap-1.5 text-[13px]" style="color:rgba(255,255,255,.7)">
-          <span id="currentCurrencyLabel">¥ CNY</span>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="9 18 15 12 9 6"/></svg>
-        </span>
-      </button>
-    </div>
-
-    <div class="pref-sub flex-col" id="prefTheme">
-      <button class="pref-back flex items-center gap-1.5 w-full px-3 py-2 mb-1 border-b text-[13px] font-medium" style="color:rgba(255,255,255,.5); border-color:rgba(255,255,255,.06)" data-pref-back><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Tema</button>
-      <button class="pref-option active flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-theme-val="dark"><span>🌙 Oscuro</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-theme-val="light"><span>☀️ Claro</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-    </div>
-
-    <div class="pref-sub flex-col" id="prefAgent">
-      <button class="pref-back flex items-center gap-1.5 w-full px-3 py-2 mb-1 border-b text-[13px] font-medium" style="color:rgba(255,255,255,.5); border-color:rgba(255,255,255,.06)" data-pref-back><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Agent</button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="LitBuy"><span class="flex items-center gap-2"><img src="../images/Litbuy_logo.png" class="w-4 h-4 rounded-sm object-contain"> LitBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option active flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="KakoBuy"><span class="flex items-center gap-2"><img src="../images/kakobuylogo.png" class="w-4 h-4 rounded-sm object-contain"> KakoBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="Hubbuy"><span class="flex items-center gap-2"><img src="../images/hubbuy-logo.png" class="w-4 h-4 rounded-sm object-contain"> Hubbuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="CssBuy"><span class="flex items-center gap-2"><img src="../images/cssbuy%20logo.png" class="w-4 h-4 rounded-sm object-contain"> CssBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="OopBuy"><span class="flex items-center gap-2"><img src="../images/oopbuylogo.png" class="w-4 h-4 rounded-sm object-contain"> OopBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-    </div>
-
-    <div class="pref-sub flex-col" id="prefCurrency">
-      <button class="pref-back flex items-center gap-1.5 w-full px-3 py-2 mb-1 border-b text-[13px] font-medium" style="color:rgba(255,255,255,.5); border-color:rgba(255,255,255,.06)" data-pref-back><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Moneda</button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="USD"><span>$ USD</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option active flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="CNY"><span>¥ CNY</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="ARS"><span>$ ARS</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="CLP"><span>$ CLP</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
-    </div>
-  </div>
-</div>
-
-<!-- ============ FOOTER ============ -->
-<footer class="border-t mt-8" style="background:rgba(127,127,127,.02); border-color:var(--border);">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-12">
-    <div class="grid sm:grid-cols-4 gap-8 mb-8">
-      <div class="sm:col-span-2">
-        <strong class="text-lg font-black block mb-2">RepsHub</strong>
-        <p class="text-sm max-w-xs" style="color:var(--text-muted)">Explorá los mejores productos réplica, guías de compra y herramientas.</p>
-      </div>
-      <div>
-        <h4 class="text-xs font-bold uppercase tracking-wide mb-3" style="color:rgba(255,255,255,.6)">Páginas</h4>
-        <ul class="flex flex-col gap-2 text-sm" style="color:var(--text-muted)">
-          <li><a href="#" class="hover:text-primary-light transition-colors">Home</a></li>
-          <li><a href="#productos" class="hover:text-primary-light transition-colors">Productos</a></li>
-          <li><a href="#" class="hover:text-primary-light transition-colors">Cómo Comprar</a></li>
-          <li><a href="#" class="hover:text-primary-light transition-colors">Batches</a></li>
-          <li><a href="#" class="hover:text-primary-light transition-colors">Calculadora</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="text-xs font-bold uppercase tracking-wide mb-3" style="color:rgba(255,255,255,.6)">Redes</h4>
-        <ul class="flex flex-col gap-2 text-sm" style="color:var(--text-muted)">
-          <li><a href="#" class="hover:text-primary-light transition-colors">Discord</a></li>
-          <li><a href="#" class="hover:text-primary-light transition-colors">Instagram</a></li>
-          <li><a href="#" class="hover:text-primary-light transition-colors">TikTok</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="border-t pt-5 text-center text-xs" style="border-color:var(--border); color:rgba(255,255,255,.3)">
-      <p>&copy; 2026 RepsHub. Todos los derechos reservados.</p>
-    </div>
-  </div>
-</footer>
+<!-- ============ BOTTOM TAB BAR (mobile) ============ -->
+<nav class="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white border-t border-gray-100 flex items-stretch h-16" id="mobileTabs">
+  <button data-tab="home" class="tab-btn flex-1 flex flex-col items-center justify-center gap-0.5 text-[#f0384a]">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 3 2 10.5V21h6.5v-6.5h7V21H22V10.5L12 3z"/></svg>
+    <span class="text-[11px] font-bold">Home</span>
+  </button>
+  <button data-tab="cart" class="tab-btn flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400 relative">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span class="text-[11px] font-bold">Cart</span>
+  </button>
+  <button data-tab="mine" class="tab-btn flex-1 flex flex-col items-center justify-center gap-0.5 text-gray-400">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="text-[11px] font-bold">Mine</span>
+  </button>
+</nav>
 
 <script>
-(function(){ var t = localStorage.getItem('rs_theme') || 'dark'; document.documentElement.setAttribute('data-theme', t); })();
-
-// ---- Featured products (sample data, design demo) ----
-var SAMPLE_PRODUCTS = [
-  { name: 'Air Jordan 4 Retro "Military Black"', agent: 'KakoBuy', price: '¥ 389' },
-  { name: 'Nike Dunk Low "Panda"', agent: 'Hubbuy', price: '¥ 265' },
-  { name: 'Yeezy Boost 350 V2 "Zebra"', agent: 'LitBuy', price: '¥ 410' },
-  { name: 'North Face Nuptse Puffer', agent: 'CssBuy', price: '¥ 520' },
-  { name: 'Essentials Hoodie Fear of God', agent: 'OopBuy', price: '¥ 340' },
-];
-(function renderFeatured(){
-  var grid = document.getElementById('featuredGrid');
-  if (!grid) return;
-  grid.innerHTML = SAMPLE_PRODUCTS.map(function(p){
-    return '' +
-      '<article class="flex-shrink-0 w-[190px] lg:w-auto rounded-xl overflow-hidden border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">' +
-        '<div class="h-[150px] flex items-center justify-center" style="background:rgba(127,127,127,.06);"><img src="../images/placeholder-product.svg" alt="' + p.name + '" class="w-full h-full object-contain p-6 opacity-70"></div>' +
-        '<div class="p-3">' +
-          '<p class="text-sm font-semibold leading-snug line-clamp-2">' + p.name + '</p>' +
-          '<div class="flex items-center justify-between mt-2">' +
-            '<span class="text-xs" style="color:var(--text-muted)">' + p.agent + '</span>' +
-            '<span class="text-sm font-bold" style="color:#ef4444">' + p.price + '</span>' +
-          '</div>' +
-        '</div>' +
-      '</article>';
-  }).join('');
-})();
-
-// ---- Mobile menu ----
-var mobileMenuToggle = document.getElementById('mobileMenuToggle');
-var mobileNav = document.getElementById('mobileNav');
-mobileMenuToggle.addEventListener('click', function(){
-  var open = mobileNav.classList.toggle('hidden') === false;
-  mobileMenuToggle.classList.toggle('active', open);
-  var spans = mobileMenuToggle.querySelectorAll('span');
-  if (open) {
-    spans[0].style.transform = 'translateY(6px) rotate(45deg)';
-    spans[1].style.opacity = '0';
-    spans[2].style.transform = 'translateY(-6px) rotate(-45deg)';
-  } else {
-    spans[0].style.transform = '';
-    spans[1].style.opacity = '1';
-    spans[2].style.transform = '';
-  }
+// Top banner dismiss
+document.getElementById('closeBanner').addEventListener('click', function(){
+  document.getElementById('topBanner').classList.add('closed');
 });
 
-// ---- Nav dropdown ("Más") ----
-var navDropdownToggle = document.getElementById('navDropdownToggle');
-var navDropdownMenu = document.getElementById('navDropdownMenu');
-var navDropdownCaret = document.getElementById('navDropdownCaret');
-navDropdownToggle.addEventListener('click', function(e){
-  e.stopPropagation();
-  var isOpen = !navDropdownMenu.classList.contains('hidden');
-  navDropdownMenu.classList.toggle('hidden');
-  navDropdownMenu.classList.toggle('flex', !isOpen);
-  navDropdownToggle.setAttribute('aria-expanded', String(!isOpen));
-  navDropdownCaret.style.transform = isOpen ? '' : 'rotate(180deg)';
-});
-document.addEventListener('click', function(e){
-  if (!document.getElementById('navDropdown').contains(e.target)) {
-    navDropdownMenu.classList.add('hidden');
-    navDropdownMenu.classList.remove('flex');
-    navDropdownToggle.setAttribute('aria-expanded', 'false');
-    navDropdownCaret.style.transform = '';
-  }
-});
-
-// ---- Promo carousel ----
+// Banner carousel autoplay + dots
 (function(){
-  var cards = document.querySelectorAll('#promoCarousel .promo-card');
-  var dots = document.querySelectorAll('#promoDots .promo-dot');
-  if (!cards.length) return;
+  var slides = document.querySelectorAll('#bannerCarousel .banner-slide');
+  var dots = document.querySelectorAll('#bannerDots .banner-dot');
   var current = 0, timer;
   function goTo(idx){
-    cards[current].classList.remove('active');
-    dots[current].classList.remove('scale-125');
-    dots[current].classList.add('bg-white/25');
-    dots[current].classList.remove('bg-white');
-    current = (idx + cards.length) % cards.length;
-    cards[current].classList.add('active');
-    dots[current].classList.add('scale-125', 'bg-white');
-    dots[current].classList.remove('bg-white/25');
+    slides[current].classList.remove('active');
+    dots[current].classList.remove('active', 'bg-white');
+    dots[current].classList.add('bg-white/60');
+    current = (idx + slides.length) % slides.length;
+    slides[current].classList.add('active');
+    dots[current].classList.add('active', 'bg-white');
+    dots[current].classList.remove('bg-white/60');
   }
-  function autoPlay(){ timer = setInterval(function(){ goTo(current + 1); }, 4000); }
+  function autoPlay(){ timer = setInterval(function(){ goTo(current + 1); }, 3500); }
   dots.forEach(function(dot){
     dot.addEventListener('click', function(){
       clearInterval(timer);
@@ -600,110 +402,38 @@ document.addEventListener('click', function(e){
       autoPlay();
     });
   });
-  var carousel = document.getElementById('promoCarousel');
-  carousel.addEventListener('mouseenter', function(){ clearInterval(timer); });
-  carousel.addEventListener('mouseleave', autoPlay);
   autoPlay();
 })();
 
-// ---- Config panel ----
-var configToggle = document.getElementById('configToggle');
-var configPanel = document.getElementById('configPanel');
-var configPanelContent = configPanel.querySelector('.config-panel-content');
-
-function openConfigPanel(){
-  configPanel.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
-  configPanelContent.classList.remove('opacity-0', '-translate-y-2', 'scale-95');
-}
-function closeConfigPanel(){
-  configPanel.classList.add('opacity-0', 'invisible', 'pointer-events-none');
-  configPanelContent.classList.add('opacity-0', '-translate-y-2', 'scale-95');
-}
-configToggle.addEventListener('click', function(e){
-  e.stopPropagation();
-  var isHidden = configPanel.classList.contains('invisible');
-  isHidden ? openConfigPanel() : closeConfigPanel();
-});
-document.addEventListener('click', function(e){
-  if (!configPanel.contains(e.target) && !configToggle.contains(e.target)) closeConfigPanel();
-});
-
-document.querySelectorAll('[data-pref-target]').forEach(function(row){
-  row.addEventListener('click', function(){
-    document.getElementById('prefMain').style.display = 'none';
-    document.getElementById(row.getAttribute('data-pref-target')).classList.add('active');
-  });
-});
-document.querySelectorAll('[data-pref-back]').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    btn.closest('.pref-sub').classList.remove('active');
-    document.getElementById('prefMain').style.display = 'flex';
-  });
-});
-
-// Theme
-document.querySelectorAll('#prefTheme [data-theme-val]').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    var val = btn.getAttribute('data-theme-val');
-    document.documentElement.setAttribute('data-theme', val);
-    localStorage.setItem('rs_theme', val);
-    document.querySelectorAll('#prefTheme .pref-option').forEach(function(o){ o.classList.remove('active'); });
-    btn.classList.add('active');
-    document.getElementById('currentThemeLabel').textContent = val === 'dark' ? '🌙 Oscuro' : '☀️ Claro';
-  });
-});
-
-// Agent (config panel)
-var AGENT_ICONS = {
-  LitBuy: '../images/Litbuy_logo.png', KakoBuy: '../images/kakobuylogo.png',
-  Hubbuy: '../images/hubbuy-logo.png', CssBuy: '../images/cssbuy%20logo.png', OopBuy: '../images/oopbuylogo.png'
-};
-function setAgent(name){
-  document.getElementById('currentAgentLabel').textContent = name;
-  document.getElementById('currentAgentIcon').src = AGENT_ICONS[name] || AGENT_ICONS.KakoBuy;
-  localStorage.setItem('rs_agent', name);
-  document.querySelectorAll('#prefAgent .pref-option').forEach(function(o){
-    o.classList.toggle('active', o.getAttribute('data-agent') === name);
-  });
-  var qs = document.getElementById('agentQuickSwitch');
-  if (name === 'LitBuy' || name === 'KakoBuy') {
-    qs.setAttribute('data-active', name);
-    document.getElementById('switchSlider').style.opacity = '1';
-    document.getElementById('switchSlider').style.transform = name === 'KakoBuy' ? 'translateX(100%)' : 'translateX(0)';
-    document.querySelectorAll('.switch-option').forEach(function(o){
-      o.classList.toggle('text-white', o.getAttribute('data-agent') === name);
-      o.classList.toggle('text-white/50', o.getAttribute('data-agent') !== name);
-    });
-  }
-}
-document.querySelectorAll('#prefAgent [data-agent]').forEach(function(btn){
-  btn.addEventListener('click', function(){ setAgent(btn.getAttribute('data-agent')); });
-});
-
-// Currency
-document.querySelectorAll('#prefCurrency [data-currency]').forEach(function(btn){
-  btn.addEventListener('click', function(){
-    var val = btn.getAttribute('data-currency');
-    var symbols = { USD: '$ USD', CNY: '¥ CNY', ARS: '$ ARS', CLP: '$ CLP' };
-    document.getElementById('currentCurrencyLabel').textContent = symbols[val];
-    localStorage.setItem('rs_currency', val);
-    document.querySelectorAll('#prefCurrency .pref-option').forEach(function(o){ o.classList.remove('active'); });
-    btn.classList.add('active');
-  });
-});
-
-// Quick switch (floating)
-document.querySelectorAll('.switch-option').forEach(function(btn){
-  btn.addEventListener('click', function(){ setAgent(btn.getAttribute('data-agent')); });
-});
-
-// Restore saved prefs
+// News ticker rotation
 (function(){
-  var savedAgent = localStorage.getItem('rs_agent');
-  if (savedAgent && AGENT_ICONS[savedAgent]) setAgent(savedAgent);
-  var savedCurrency = localStorage.getItem('rs_currency');
-  if (savedCurrency) document.querySelector('[data-currency="' + savedCurrency + '"]')?.click();
+  var items = document.querySelectorAll('#newsTicker .ticker-item');
+  var current = 0;
+  setInterval(function(){
+    items[current].classList.remove('active');
+    current = (current + 1) % items.length;
+    items[current].classList.add('active');
+  }, 4000);
 })();
+
+// Back to top button
+var backTop = document.getElementById('backTop');
+window.addEventListener('scroll', function(){
+  if (window.scrollY > 400) {
+    backTop.classList.remove('opacity-0', 'pointer-events-none');
+  } else {
+    backTop.classList.add('opacity-0', 'pointer-events-none');
+  }
+});
+backTop.addEventListener('click', function(){ window.scrollTo({ top: 0, behavior: 'smooth' }); });
+
+// Mobile tab bar (visual only)
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('text-[#f0384a]'); b.classList.add('text-gray-400'); });
+    btn.classList.remove('text-gray-400'); btn.classList.add('text-[#f0384a]');
+  });
+});
 </script>
 </body>
 </html>
