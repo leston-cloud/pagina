@@ -1,0 +1,14 @@
+{
+  "name": "repshubs",
+  "version": "1.0.0",
+  "description": "RepsHub - Sitio web para descubrir los mejores productos REPS desde China",
+  "main": "index.html",
+  "scripts": {},
+  "dependencies": {
+    "@supabase/supabase-js": "^2.39.0",
+    "dotenv": "^16.3.1"
+  },
+  "keywords": ["fashion", "reps", "ecommerce", "china", "hubbuy", "supabase"],
+  "author": "RepsHub",
+  "license": "ISC"
+}

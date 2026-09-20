@@ -1,0 +1,14 @@
+/* TEAM */
+Developer: RepsHub Team
+Contact: https://repshub.vercel.app/
+Location: Argentina
+
+/* THANKS */
+Community: Discord RepsHub Community
+Agents: Hubbuy, KakoBuy, MuleBuy
+
+/* SITE */
+Last update: 2024/02/10
+Standards: HTML5, CSS3, JavaScript ES6+
+Components: Vanilla JS, Supabase
+Software: VSCode, Cursor

@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0N938PXJ1R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-0N938PXJ1R');
+    </script>
+
+    <meta name="google-site-verification" content="3gY6H49qBjyQQ_dPReii5aDbsPjU2OV4VR_30p-vqHk" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Estimador de peso para paquetes de China. Calculá el peso de tu haul antes de enviarlo y estimá los costos de shipping.">
+    <title>Estimador de Peso | RepsHub Tools</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css?v=17" type="text/css" media="all">
+    <style>
+    /* ---- Weight Estimator Scoped Styles ---- */
+    .we-hero {
+        padding: 6rem 0 2.5rem;
+        text-align: center;
+        position: relative;
+    }
+    .we-hero::before {
+        content: '';
+        position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(220,38,38,0.08), transparent 70%);
+        pointer-events: none;
+    }
+    .we-breadcrumb {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        color: rgba(255,255,255,0.4); font-size: 0.85rem; margin-bottom: 1.5rem;
+    }
+    .we-breadcrumb a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+    .we-breadcrumb a:hover { color: var(--primary-light); }
+    .we-title {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800; line-height: 1;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #fff 30%, var(--primary-light));
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+    .we-desc {
+        color: rgba(255,255,255,0.55); font-size: 1.05rem; max-width: 580px; margin: 0 auto;
+    }
+    /* Layout */
+    .we-layout {
+        display: grid; grid-template-columns: 1fr 360px; gap: 2rem;
+        align-items: start; padding-bottom: 4rem;
+    }
+    @media (max-width: 900px) {
+        .we-layout { grid-template-columns: 1fr; }
+        .we-sidebar { position: static !important; order: -1; }
+    }
+    /* Left Panel - Add Items */
+    .we-panel {
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 1.2rem; padding: 1.8rem; position: relative;
+    }
+    .we-panel-header {
+        display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.25rem;
+    }
+    .we-panel-title { font-size: 1.3rem; font-weight: 700; color: #fff; }
+    .we-panel-sub { color: rgba(255,255,255,0.45); font-size: 0.88rem; margin-bottom: 1.2rem; }
+    .we-search {
+        width: 100%; padding: 0.75rem 1rem 0.75rem 2.5rem;
+        background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 0.75rem; color: #fff; font-size: 0.9rem;
+        transition: border-color 0.2s, background 0.2s; outline: none;
+    }
+    .we-search:focus { border-color: rgba(220,38,38,0.4); background: rgba(255,255,255,0.06); }
+    .we-search-wrap {
+        position: relative; margin-bottom: 1.5rem;
+    }
+    .we-search-wrap svg {
+        position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+        color: rgba(255,255,255,0.35); width: 16px; height: 16px;
+    }
+    /* Category grid */
+    .we-cat-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.75rem;
+    }
+    .we-cat-card {
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 0.6rem; padding: 1.3rem 0.6rem;
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 1rem; cursor: pointer; transition: all 0.2s ease; user-select: none;
+    }
+    .we-cat-card:hover {
+        background: rgba(255,255,255,0.05); border-color: rgba(220,38,38,0.3);
+        transform: translateY(-2px);
+    }
+    .we-cat-icon {
+        width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+        background: rgba(220,38,38,0.08); color: var(--primary-light); font-size: 1.2rem;
+    }
+    .we-cat-name { font-size: 0.88rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+    /* Items list */
+    .we-items-header {
+        display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.2rem;
+    }
+    .we-back-btn {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+        border-radius: 0.6rem; padding: 0.4rem 0.8rem; color: rgba(255,255,255,0.7);
+        font-size: 0.82rem; cursor: pointer; transition: all 0.15s;
+    }
+    .we-back-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+    .we-items-title { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .we-item-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;
+    }
+    @media (max-width: 600px) { .we-item-grid { grid-template-columns: 1fr; } }
+    .we-item {
+        display: flex; align-items: center; gap: 0.8rem; padding: 0.9rem 1rem;
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 0.85rem; cursor: pointer; transition: all 0.2s; user-select: none;
+    }
+    .we-item:hover {
+        background: rgba(255,255,255,0.05); border-color: rgba(220,38,38,0.25);
+    }
+    .we-item-add {
+        width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+        display: flex; align-items: center; justify-content: center;
+        background: rgba(220,38,38,0.1); color: var(--primary-light); font-size: 1.1rem; font-weight: 700;
+        transition: background 0.15s;
+    }
+    .we-item:hover .we-item-add { background: rgba(220,38,38,0.2); }
+    .we-item-info { flex: 1; min-width: 0; }
+    .we-item-name { font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .we-item-weight { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    /* Tip */
+    .we-tip {
+        display: flex; gap: 0.6rem; align-items: flex-start;
+        margin-top: 1.5rem; padding: 1rem 1.2rem;
+        background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05);
+        border-radius: 0.75rem; font-size: 0.82rem; color: rgba(255,255,255,0.5); line-height: 1.5;
+    }
+    .we-tip svg { flex-shrink: 0; margin-top: 2px; color: rgba(255,255,255,0.3); }
+    /* Sidebar - Packaging */
+    .we-sidebar {
+        position: sticky; top: 100px;
+    }
+    .we-sidebar-panel {
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 1.2rem; padding: 1.8rem; display: flex; flex-direction: column; gap: 1.2rem;
+    }
+    .we-sidebar-title {
+        display: flex; align-items: center; gap: 0.5rem;
+        font-size: 1.15rem; font-weight: 700; color: #fff;
+    }
+    .we-packaging {
+        padding: 1rem 1.2rem; border-radius: 0.85rem;
+        border: 1px solid rgba(220,38,38,0.25); background: rgba(220,38,38,0.04);
+    }
+    .we-packaging-name { font-size: 0.92rem; font-weight: 600; color: #fff; }
+    .we-packaging-sub { font-size: 0.78rem; color: rgba(255,255,255,0.45); margin-top: 0.2rem; }
+    .we-packaging-weight {
+        font-size: 0.92rem; font-weight: 600; color: rgba(255,255,255,0.8);
+        float: right; margin-top: -1.4rem;
+    }
+    .we-stat-row {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.3rem 0; font-size: 0.9rem;
+    }
+    .we-stat-label { color: rgba(255,255,255,0.55); }
+    .we-stat-val { color: rgba(255,255,255,0.85); font-weight: 600; }
+    .we-divider { border: none; border-top: 1px solid rgba(255,255,255,0.06); margin: 0.5rem 0; }
+    .we-total-row {
+        display: flex; justify-content: space-between; align-items: center; padding: 0.3rem 0;
+    }
+    .we-total-label { font-size: 1rem; font-weight: 700; color: #fff; }
+    .we-total-val { font-size: 1.4rem; font-weight: 800; color: var(--primary-light); }
+    .we-unit-boxes {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem;
+    }
+    .we-unit-box {
+        text-align: center; padding: 0.8rem;
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 0.75rem;
+    }
+    .we-unit-val { font-size: 1.1rem; font-weight: 700; color: #fff; }
+    .we-unit-label { font-size: 0.72rem; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.5px; }
+    /* Your Items section */
+    .we-your-items {
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 1.2rem; padding: 1.8rem; margin-top: 2rem;
+    }
+    .we-your-header {
+        display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;
+    }
+    .we-your-title { font-size: 1.1rem; font-weight: 700; color: #fff; display: flex; align-items: center; gap: 0.5rem; }
+    .we-clear-btn {
+        background: rgba(220,38,38,0.08); border: 1px solid rgba(220,38,38,0.2);
+        color: var(--primary-light); font-size: 0.78rem; padding: 0.35rem 0.8rem;
+        border-radius: 0.5rem; cursor: pointer; transition: all 0.15s;
+    }
+    .we-clear-btn:hover { background: rgba(220,38,38,0.15); }
+    .we-cart-item {
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .we-cart-item:last-child { border-bottom: none; }
+    .we-cart-info { display: flex; flex-direction: column; }
+    .we-cart-name { font-size: 0.9rem; font-weight: 600; color: rgba(255,255,255,0.85); }
+    .we-cart-weight { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    .we-cart-actions { display: flex; align-items: center; gap: 0.5rem; }
+    .we-cart-btn {
+        width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+        background: rgba(255,255,255,0.04); color: #fff; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; transition: all 0.15s; font-size: 0.8rem;
+    }
+    .we-cart-btn:hover { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.2); }
+    .we-cart-qty { font-weight: 700; font-size: 0.9rem; color: #fff; min-width: 24px; text-align: center; }
+    .we-empty {
+        text-align: center; padding: 2rem 1rem; color: rgba(255,255,255,0.35); font-size: 0.88rem;
+    }
+    /* FAQ */
+    .we-faq { padding: 3rem 0 4rem; }
+    .we-faq-title { font-size: 1.5rem; font-weight: 700; color: #fff; margin-bottom: 1.5rem; }
+    .we-faq-item {
+        border: 1px solid rgba(255,255,255,0.06); border-radius: 0.85rem;
+        margin-bottom: 0.6rem; overflow: hidden; background: rgba(255,255,255,0.02);
+    }
+    .we-faq-q {
+        padding: 1rem 1.2rem; cursor: pointer; font-weight: 600; color: rgba(255,255,255,0.8);
+        display: flex; justify-content: space-between; align-items: center; user-select: none;
+        transition: color 0.2s;
+    }
+    .we-faq-q:hover { color: #fff; }
+    .we-faq-q svg { transition: transform 0.2s; color: rgba(255,255,255,0.3); }
+    .we-faq-item.open .we-faq-q svg { transform: rotate(180deg); }
+    .we-faq-a {
+        max-height: 0; overflow: hidden; padding: 0 1.2rem;
+        color: rgba(255,255,255,0.5); font-size: 0.9rem; line-height: 1.7;
+        transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    .we-faq-item.open .we-faq-a { max-height: 300px; padding: 0 1.2rem 1rem; }
+
+    /* Shipping Cost Estimator */
+    .we-shipping {
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 1.2rem; padding: 1.8rem; margin-top: 2rem;
+    }
+    .we-shipping-header {
+        display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem;
+    }
+    .we-shipping-title { font-size: 1.15rem; font-weight: 700; color: #fff; }
+    .we-shipping-method {
+        display: flex; align-items: center; gap: 0.8rem;
+        padding: 1rem 1.2rem; border-radius: 0.85rem;
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+        margin-bottom: 1.2rem;
+    }
+    .we-shipping-method-icon {
+        width: 40px; height: 40px; border-radius: 10px;
+        background: rgba(34,197,94,0.1); color: #22C55E;
+        display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .we-shipping-method-name { font-weight: 600; font-size: 0.92rem; color: rgba(255,255,255,0.85); }
+    .we-shipping-method-route { font-size: 0.78rem; color: rgba(255,255,255,0.4); }
+    .we-shipping-breakdown {
+        display: flex; flex-direction: column; gap: 0.45rem;
+        padding: 1rem 0; border-top: 1px solid rgba(255,255,255,0.05);
+        border-bottom: 1px solid rgba(255,255,255,0.05);
+        margin-bottom: 1.2rem;
+    }
+    .we-ship-row {
+        display: flex; justify-content: space-between; align-items: center;
+        font-size: 0.85rem;
+    }
+    .we-ship-row-label { color: rgba(255,255,255,0.45); }
+    .we-ship-row-val { color: rgba(255,255,255,0.7); font-weight: 500; }
+    .we-ship-total {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 1rem 1.2rem; border-radius: 0.85rem;
+        background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+        margin-bottom: 0.75rem;
+    }
+    .we-ship-total-label { font-size: 0.95rem; font-weight: 700; color: #fff; }
+    .we-ship-total-val { font-size: 1.3rem; font-weight: 800; color: #fff; }
+    .we-ship-discount {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 1rem 1.2rem; border-radius: 0.85rem;
+        background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.2);
+        position: relative;
+    }
+    .we-ship-discount-label { font-size: 0.88rem; font-weight: 600; color: rgba(255,255,255,0.8); max-width: 60%; }
+    .we-ship-discount-label a { color: var(--primary-light); text-decoration: underline; font-weight: 700; }
+    .we-ship-discount-val { font-size: 1.3rem; font-weight: 800; color: var(--primary-light); }
+    .we-ship-badge {
+        position: absolute; top: -8px; right: 12px;
+        background: var(--primary-color); color: #fff; font-size: 0.65rem; font-weight: 700;
+        padding: 0.2rem 0.6rem; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .we-ship-note {
+        font-size: 0.78rem; color: rgba(255,255,255,0.35); margin-top: 1rem; line-height: 1.5;
+    }
+    :root[data-theme="light"] .we-shipping { background: var(--bg-card); border-color: var(--border-light); }
+    :root[data-theme="light"] .we-shipping-title { color: var(--text); }
+    :root[data-theme="light"] .we-ship-total-label,
+    :root[data-theme="light"] .we-ship-total-val { color: var(--text); }
+    :root[data-theme="light"] .we-shipping-method { background: var(--bg-card-2); border-color: var(--border-light); }
+    :root[data-theme="light"] .we-shipping-method-name { color: var(--text); }
+    :root[data-theme="light"] .we-ship-row-label { color: var(--muted); }
+    :root[data-theme="light"] .we-ship-row-val { color: var(--text); }
+    :root[data-theme="light"] .we-ship-discount-label { color: var(--text); }
+    :root[data-theme="light"] .we-ship-note { color: var(--muted); }
+
+    :root[data-theme="light"] .we-panel,
+    :root[data-theme="light"] .we-sidebar-panel,
+    :root[data-theme="light"] .we-your-items,
+    :root[data-theme="light"] .we-faq-item { background: var(--bg-card); border-color: var(--border-light); }
+    :root[data-theme="light"] .we-title { background: linear-gradient(135deg, var(--text) 30%, var(--primary-color)); -webkit-background-clip: text; background-clip: text; }
+    :root[data-theme="light"] .we-desc,
+    :root[data-theme="light"] .we-panel-sub,
+    :root[data-theme="light"] .we-tip,
+    :root[data-theme="light"] .we-stat-label,
+    :root[data-theme="light"] .we-packaging-sub,
+    :root[data-theme="light"] .we-unit-label,
+    :root[data-theme="light"] .we-item-weight,
+    :root[data-theme="light"] .we-cart-weight,
+    :root[data-theme="light"] .we-empty,
+    :root[data-theme="light"] .we-faq-a,
+    :root[data-theme="light"] .we-breadcrumb { color: var(--muted); }
+    :root[data-theme="light"] .we-panel-title,
+    :root[data-theme="light"] .we-sidebar-title,
+    :root[data-theme="light"] .we-items-title,
+    :root[data-theme="light"] .we-cat-name,
+    :root[data-theme="light"] .we-item-name,
+    :root[data-theme="light"] .we-packaging-name,
+    :root[data-theme="light"] .we-stat-val,
+    :root[data-theme="light"] .we-total-label,
+    :root[data-theme="light"] .we-unit-val,
+    :root[data-theme="light"] .we-cart-name,
+    :root[data-theme="light"] .we-cart-qty,
+    :root[data-theme="light"] .we-your-title,
+    :root[data-theme="light"] .we-faq-title,
+    :root[data-theme="light"] .we-faq-q { color: var(--text); }
+    :root[data-theme="light"] .we-search { background: var(--bg-card-2); border-color: var(--border-light); color: var(--text); }
+    :root[data-theme="light"] .we-cat-card,
+    :root[data-theme="light"] .we-item,
+    :root[data-theme="light"] .we-unit-box { background: var(--bg-card-2); border-color: var(--border-light); }
+    </style>
+</head>
+<body>
+    <script>(function(){var t=localStorage.getItem('selectedTheme')||'dark';document.documentElement.setAttribute('data-theme',t)})()</script>
+
+    <header class="header" id="header">
+    <meta name="google-site-verification" content="3gY6H49qBjyQQ_dPReii5aDbsPjU2OV4VR_30p-vqHk" />
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo"><a href="index.html">RepsHub</a></div>
+                    <nav class="nav" id="nav">
+                        <ul class="nav-list">
+                            <li><a href="productos.html" class="nav-link">Productos</a></li>
+                            <li><a href="sellers.html" class="nav-link">Sellers</a></li>
+                            <li class="nav-dropdown">
+                                <button class="nav-link nav-dropdown-toggle" type="button" aria-expanded="false"><span>Más</span><svg class="nav-dropdown-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+                                <div class="nav-dropdown-menu">
+                                    <a href="como-comprar.html" class="nav-dropdown-link">Cómo Comprar</a>
+                                    <a href="batches.html" class="nav-dropdown-link">Batches</a>
+                                    <a href="crypto.html" class="nav-dropdown-link">Crypto</a>
+                                    <a href="impuestos.html" class="nav-dropdown-link">Calculadora de Impuestos</a>
+                                    <a href="peso.html" class="nav-dropdown-link">Estimador de Peso</a>
+                                    <a href="links.html" class="nav-dropdown-link">Links</a>
+                                </div>
+                            </li>
+                                                    <!-- Solo en móvil, el botón de registrarse -->
+                            <li class="nav-mobile-register">
+                                <a href="https://ikako.vip/r/gonza" target="_blank" rel="noopener noreferrer" class="btn-register-mobile">Registrarse en KakoBuy</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="header-actions">
+                    <button class="config-toggle" id="configToggle" aria-label="Configuración">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
+                    <a href="https://ikako.vip/r/gonza" target="_blank" rel="noopener noreferrer" class="btn-register">KakoBuy Registrarse</a>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Alternar menú"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="we-hero">
+            <div class="container">
+                <div class="we-breadcrumb">
+                    <a href="index.html">Home</a> <span>›</span> <span>Estimador de Peso</span>
+                </div>
+                <h1 class="we-title">Estimador de Peso</h1>
+                <p class="we-desc">Estimá el peso de tu paquete antes de enviarlo. Seleccioná los artículos que vas a enviar y obtené un estimado preciso.</p>
+            </div>
+        </section>
+
+        <section class="container we-layout">
+            <!-- Left: Add Items Panel -->
+            <div>
+                <div class="we-panel">
+                    <div class="we-panel-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        <span class="we-panel-title">Agregar Artículos</span>
+                    </div>
+                    <div class="we-panel-sub" id="panelSub">Seleccioná una categoría</div>
+
+                    <div class="we-search-wrap">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <input type="text" class="we-search" id="itemSearch" placeholder="Buscar artículos...">
+                    </div>
+
+                    <div id="categoryView">
+                        <div class="we-cat-grid" id="catGrid"></div>
+                    </div>
+
+                    <div id="itemsView" style="display:none">
+                        <div class="we-items-header">
+                            <button class="we-back-btn" onclick="showCategories()">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                                Categorías
+                            </button>
+                            <span class="we-items-title" id="currentCatTitle"></span>
+                        </div>
+                        <div class="we-item-grid" id="itemGrid"></div>
+                    </div>
+
+                    <div class="we-tip">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+                        <span>Los pesos son promedios aproximados. El peso real puede variar ±10-15% según la marca y los materiales.</span>
+                    </div>
+                </div>
+
+                <!-- Your Items -->
+                <div class="we-your-items">
+                    <div class="we-your-header">
+                        <div class="we-your-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+                            <span>Tus Artículos (<span id="itemCount">0</span>)</span>
+                        </div>
+                        <button class="we-clear-btn" onclick="clearCart()">Vaciar</button>
+                    </div>
+                    <div id="cartContainer">
+                        <div class="we-empty">Agregá artículos para calcular el peso total del paquete</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Packaging Sidebar -->
+            <div class="we-sidebar">
+                <div class="we-sidebar-panel">
+                    <div class="we-sidebar-title">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                        Packaging
+                    </div>
+
+                    <div class="we-packaging">
+                        <div class="we-packaging-name" id="packagingName">No Box (Poly Bag Only)</div>
+                        <div class="we-packaging-weight" id="packagingWeightDisplay">50g</div>
+                        <div class="we-packaging-sub">Seleccionado automáticamente según tus artículos</div>
+                    </div>
+
+                    <div class="we-stat-row">
+                        <span class="we-stat-label">Artículos:</span>
+                        <span class="we-stat-val" id="itemsWeightDisplay">0g</span>
+                    </div>
+                    <div class="we-stat-row">
+                        <span class="we-stat-label">Empaquetado:</span>
+                        <span class="we-stat-val" id="packWeightDisplay">50g</span>
+                    </div>
+
+                    <hr class="we-divider">
+
+                    <div class="we-total-row">
+                        <span class="we-total-label">Peso Total:</span>
+                        <span class="we-total-val" id="totalWeightDisplay">50g</span>
+                    </div>
+
+                    <div class="we-unit-boxes">
+                        <div class="we-unit-box">
+                            <div class="we-unit-val" id="kgDisplay">0.05 kg</div>
+                            <div class="we-unit-label">Kilogramos</div>
+                        </div>
+                        <div class="we-unit-box">
+                            <div class="we-unit-val" id="lbsDisplay">0.11 lbs</div>
+                            <div class="we-unit-label">Libras</div>
+                        </div>
+                    </div>
+                </div>
+
+                    <!-- Shipping cost section inside sidebar -->
+            </div>
+        </section>
+
+        <!-- Shipping Cost Estimator -->
+        <section class="container" style="padding-bottom:0">
+            <div class="we-shipping" id="shippingEstimator">
+                <div class="we-shipping-header">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+                    <span class="we-shipping-title">Costo de Envío Estimado</span>
+                </div>
+
+                <div class="we-shipping-method">
+                    <div class="we-shipping-method-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+                    </div>
+                    <div>
+                        <div class="we-shipping-method-name">China Post SAL</div>
+                        <div class="we-shipping-method-route">China → Argentina</div>
+                    </div>
+                </div>
+
+                <div class="we-shipping-breakdown">
+                    <div class="we-ship-row">
+                        <span class="we-ship-row-label">Peso del paquete</span>
+                        <span class="we-ship-row-val" id="shipWeight">50g</span>
+                    </div>
+                    <div class="we-ship-row">
+                        <span class="we-ship-row-label">Tarifa base (primeros 1000g)</span>
+                        <span class="we-ship-row-val" id="shipBase">$27.56</span>
+                    </div>
+                    <div class="we-ship-row">
+                        <span class="we-ship-row-label">Peso adicional</span>
+                        <span class="we-ship-row-val" id="shipExtra">$0.00</span>
+                    </div>
+                    <div class="we-ship-row">
+                        <span class="we-ship-row-label">Comisión transportista</span>
+                        <span class="we-ship-row-val">$3.16</span>
+                    </div>
+                    <div class="we-ship-row">
+                        <span class="we-ship-row-label">Recargo combustible</span>
+                        <span class="we-ship-row-val">$0.00</span>
+                    </div>
+                    <div class="we-ship-row">
+                        <span class="we-ship-row-label">Gastos procesamiento</span>
+                        <span class="we-ship-row-val">$1.27</span>
+                    </div>
+                </div>
+
+                <div class="we-ship-total">
+                    <span class="we-ship-total-label">Costo Normal</span>
+                    <span class="we-ship-total-val" id="shipNormal">$31.99 USD</span>
+                </div>
+
+                <div class="we-ship-discount">
+                    <span class="we-ship-badge">Ahorrá $15</span>
+                    <span class="we-ship-discount-label">Con cupón de bienvenida (<a href="https://ikako.vip/r/gonza" target="_blank" rel="noopener noreferrer">registrándote acá</a>)</span>
+                    <span class="we-ship-discount-val" id="shipDiscount">$16.99 USD</span>
+                </div>
+
+                <div class="we-ship-note">* Los costos son estimaciones basadas en tarifas de China Post SAL a Argentina. El monto final puede variar según el agente y el método de envío seleccionado.</div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="we-faq container">
+            <h2 class="we-faq-title">Preguntas Frecuentes</h2>
+            <div class="we-faq-item">
+                <div class="we-faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    ¿Qué tan precisas son las estimaciones de peso?
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="we-faq-a">Nuestras estimaciones se basan en promedios recopilados de cientos de envíos reales. Son una referencia útil para planificar, pero el peso real puede variar ±10-15% según el talle, marca, y materiales del producto. El peso del warehouse siempre es el definitivo.</div>
+            </div>
+            <div class="we-faq-item">
+                <div class="we-faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    ¿Qué pasa si mi artículo no aparece en la lista?
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="we-faq-a">Usá el artículo más similar como referencia. Por ejemplo, una campera que no está listada puede estimarse usando "Campera Fina" o "Puffer" según el grosor. Estamos actualizando la lista constantemente.</div>
+            </div>
+            <div class="we-faq-item">
+                <div class="we-faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    ¿Cómo se selecciona el tipo de empaquetado?
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="we-faq-a">El empaquetado se ajusta automáticamente según los artículos que agregues. Si incluís zapatillas con caja, se agrega peso de caja. Si solo es ropa, se usa bolsa de polietileno. El warehouse puede agregar protección extra (burbujas, esquineros) que puede sumar 200-500g adicionales.</div>
+            </div>
+            <div class="we-faq-item">
+                <div class="we-faq-q" onclick="this.parentElement.classList.toggle('open')">
+                    ¿Cómo calculo los costos de envío?
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </div>
+                <div class="we-faq-a">Con el peso estimado, podés ir a tu agente (KakoBuy, MuleBuy, etc.) y usar su calculadora de envíos. Ingresá el peso total y tu país de destino para obtener las tarifas de cada línea de envío disponible.</div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="rs-footer">
+        <div class="container">
+            <div class="rs-footer-grid">
+                <div class="rs-footer-col">
+                    <strong class="rs-footer-brand">RepsHub</strong>
+                    <p class="rs-footer-bio">Explorá los mejores productos réplica, guías de compra y herramientas.</p>
+                </div>
+                <div class="rs-footer-col">
+                    <h4>Páginas</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="productos.html">Productos</a></li>
+                        <li><a href="como-comprar.html">Cómo Comprar</a></li>
+                        <li><a href="peso.html">Estimador de Peso</a></li>
+                    </ul>
+                </div>
+                <div class="rs-footer-col">
+                    <h4>Redes</h4>
+                    <ul>
+                        <li><a href="https://discord.gg/repshub" target="_blank" rel="noopener noreferrer">Discord</a></li>
+                        <li><a href="https://www.instagram.com/gonzacuevas_" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                        <li><a href="https://www.tiktok.com/@rxpsog" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rs-footer-bottom"><p>&copy; 2026 RepsHub. Todos los derechos reservados.</p></div>
+        </div>
+    </footer>
+
+    <script>
+    // ---- Data ----
+    const CATEGORIES = [
+        { id: 'calzado', name: 'Calzado', icon: '👟' },
+        { id: 'tops', name: 'Ropa Superior', icon: '👕' },
+        { id: 'bottoms', name: 'Ropa Inferior', icon: '👖' },
+        { id: 'accesorios', name: 'Accesorios', icon: '🎒' },
+        { id: 'bolsos', name: 'Bolsos', icon: '👜' },
+        { id: 'deportes', name: 'Deportes', icon: '⚽' },
+        { id: 'electronica', name: 'Electrónica', icon: '🎧' },
+        { id: 'hogar', name: 'Hogar', icon: '🏠' },
+    ];
+
+    const ITEMS = {
+        calzado: [
+            { name: 'Zapatillas (Con Caja)', weight: 1300 },
+            { name: 'Zapatillas (Sin Caja)', weight: 950 },
+            { name: 'Zapatillas Basket/High', weight: 1500 },
+            { name: 'Slides / Ojotas', weight: 600 },
+            { name: 'Botas / Botines', weight: 1100 },
+            { name: 'Crocs / Zuecos', weight: 450 },
+        ],
+        tops: [
+            { name: 'Remera T-Shirt', weight: 250 },
+            { name: 'Polo', weight: 300 },
+            { name: 'Camisa', weight: 350 },
+            { name: 'Hoodie / Buzo', weight: 800 },
+            { name: 'Sweater / Pullover', weight: 600 },
+            { name: 'Campera Fina', weight: 600 },
+            { name: 'Puffer / Camperón', weight: 1300 },
+            { name: 'Chaleco', weight: 450 },
+            { name: 'Musculosa / Tank Top', weight: 150 },
+        ],
+        bottoms: [
+            { name: 'Pantalón / Jean', weight: 650 },
+            { name: 'Short / Bermuda', weight: 300 },
+            { name: 'Jogger / Sweatpant', weight: 550 },
+            { name: 'Calza / Legging', weight: 250 },
+            { name: 'Pantalón Cargo', weight: 700 },
+        ],
+        accesorios: [
+            { name: 'Gorra', weight: 120 },
+            { name: 'Medias (Par)', weight: 60 },
+            { name: 'Cinturón', weight: 250 },
+            { name: 'Lentes de Sol', weight: 150 },
+            { name: 'Bufanda / Scarf', weight: 200 },
+            { name: 'Joyería / Reloj', weight: 180 },
+            { name: 'Billetera', weight: 120 },
+            { name: 'Anillo / Cadena', weight: 80 },
+            { name: 'Guantes', weight: 100 },
+        ],
+        bolsos: [
+            { name: 'Mochila Grande', weight: 900 },
+            { name: 'Cartera Chica', weight: 450 },
+            { name: 'Tote Bag', weight: 350 },
+            { name: 'Riñonera / Crossbody', weight: 300 },
+            { name: 'Bolso de Viaje', weight: 1200 },
+            { name: 'Clutch / Sobre', weight: 200 },
+        ],
+        deportes: [
+            { name: 'Camiseta de Fútbol', weight: 280 },
+            { name: 'Conjunto Deportivo', weight: 650 },
+            { name: 'Short Deportivo', weight: 220 },
+            { name: 'Guayos / Botines Fútbol', weight: 800 },
+        ],
+        electronica: [
+            { name: 'Auriculares Over-Ear', weight: 350 },
+            { name: 'Auriculares In-Ear + Case', weight: 80 },
+            { name: 'Funda de Celular', weight: 40 },
+            { name: 'Smartwatch', weight: 120 },
+        ],
+        hogar: [
+            { name: 'Toalla', weight: 500 },
+            { name: 'Almohada Chica', weight: 400 },
+            { name: 'Decoración (Pequeña)', weight: 300 },
+        ],
+    };
+
+    const PACKAGING_TYPES = [
+        { name: 'No Box (Poly Bag Only)', weight: 50, condition: () => true },
+        { name: 'Simple Box', weight: 200, condition: (items) => getTotalItemWeight(items) > 1500 },
+        { name: 'Reinforced Box', weight: 450, condition: (items) => items.some(i => i.name.includes('Caja') || i.name.includes('Basket')) },
+    ];
+
+    // ---- State ----
+    let cart = JSON.parse(localStorage.getItem('we_cart') || '[]');
+    let currentCategory = null;
+    let allItemsFlat = [];
+
+    // Build flat items list for search
+    Object.entries(ITEMS).forEach(([catId, items]) => {
+        items.forEach(item => {
+            allItemsFlat.push({ ...item, catId });
+        });
+    });
+
+    // ---- Render ----
+    function renderCategories() {
+        const grid = document.getElementById('catGrid');
+        grid.innerHTML = CATEGORIES.map(cat => `
+            <div class="we-cat-card" onclick="showCategory('${cat.id}')">
+                <div class="we-cat-icon">${cat.icon}</div>
+                <div class="we-cat-name">${cat.name}</div>
+            </div>
+        `).join('');
+    }
+
+    function showCategory(catId) {
+        currentCategory = catId;
+        const cat = CATEGORIES.find(c => c.id === catId);
+        document.getElementById('categoryView').style.display = 'none';
+        document.getElementById('itemsView').style.display = 'block';
+        document.getElementById('currentCatTitle').textContent = cat.name;
+        document.getElementById('panelSub').textContent = `${ITEMS[catId].length} artículos`;
+        renderItems(ITEMS[catId]);
+    }
+
+    function showCategories() {
+        currentCategory = null;
+        document.getElementById('categoryView').style.display = 'block';
+        document.getElementById('itemsView').style.display = 'none';
+        document.getElementById('panelSub').textContent = 'Seleccioná una categoría';
+        document.getElementById('itemSearch').value = '';
+    }
+
+    function renderItems(items) {
+        const grid = document.getElementById('itemGrid');
+        if (items.length === 0) {
+            grid.innerHTML = '<div class="we-empty">No se encontraron artículos</div>';
+            return;
+        }
+        grid.innerHTML = items.map(item => `
+            <div class="we-item" onclick="addItem('${item.name.replace(/'/g, "\\'")}', ${item.weight})">
+                <div class="we-item-add">+</div>
+                <div class="we-item-info">
+                    <div class="we-item-name">${item.name}</div>
+                    <div class="we-item-weight">${item.weight}g</div>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function getTotalItemWeight(items) {
+        return items.reduce((sum, item) => sum + item.weight * item.qty, 0);
+    }
+
+    function getPackaging() {
+        // Pick most appropriate packaging
+        for (let i = PACKAGING_TYPES.length - 1; i >= 0; i--) {
+            if (PACKAGING_TYPES[i].condition(cart)) return PACKAGING_TYPES[i];
+        }
+        return PACKAGING_TYPES[0];
+    }
+
+    function renderCart() {
+        const container = document.getElementById('cartContainer');
+        const countEl = document.getElementById('itemCount');
+        const totalCount = cart.reduce((s, i) => s + i.qty, 0);
+        countEl.textContent = totalCount;
+
+        if (cart.length === 0) {
+            container.innerHTML = '<div class="we-empty">Agregá artículos para calcular el peso total del paquete</div>';
+        } else {
+            container.innerHTML = cart.map((item, i) => `
+                <div class="we-cart-item">
+                    <div class="we-cart-info">
+                        <span class="we-cart-name">${item.name}</span>
+                        <span class="we-cart-weight">${item.weight}g × ${item.qty} = ${item.weight * item.qty}g</span>
+                    </div>
+                    <div class="we-cart-actions">
+                        <button class="we-cart-btn" onclick="updateQty(${i}, -1)">−</button>
+                        <span class="we-cart-qty">${item.qty}</span>
+                        <button class="we-cart-btn" onclick="updateQty(${i}, 1)">+</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        updateSidebar();
+        localStorage.setItem('we_cart', JSON.stringify(cart));
+    }
+
+    function updateSidebar() {
+        const itemsWeight = getTotalItemWeight(cart);
+        const packaging = getPackaging();
+        const totalWeight = itemsWeight + packaging.weight;
+
+        document.getElementById('packagingName').textContent = packaging.name;
+        document.getElementById('packagingWeightDisplay').textContent = packaging.weight + 'g';
+        document.getElementById('itemsWeightDisplay').textContent = itemsWeight + 'g';
+        document.getElementById('packWeightDisplay').textContent = packaging.weight + 'g';
+
+        if (totalWeight >= 1000) {
+            document.getElementById('totalWeightDisplay').textContent = (totalWeight / 1000).toFixed(2) + ' kg';
+        } else {
+            document.getElementById('totalWeightDisplay').textContent = totalWeight + 'g';
+        }
+
+        document.getElementById('kgDisplay').textContent = (totalWeight / 1000).toFixed(2) + ' kg';
+        document.getElementById('lbsDisplay').textContent = (totalWeight / 453.592).toFixed(2) + ' lbs';
+
+        // Shipping cost calculation (China Post SAL → Argentina)
+        updateShippingCost(totalWeight);
+    }
+
+    function updateShippingCost(weightGrams) {
+        const BASE_RATE = 27.56;        // USD for first 1000g
+        const EXTRA_RATE = 11.2;        // USD per additional 1000g
+        const CARRIER_FEE = 3.16;       // USD fixed
+        const FUEL_SURCHARGE = 0;       // USD fixed
+        const PROCESSING_FEE = 1.27;    // USD fixed
+        const COUPON_DISCOUNT = 15;     // USD welcome coupon
+
+        // Calculate extra weight cost
+        const extraWeight = Math.max(0, weightGrams - 1000);
+        const extraCost = (extraWeight / 1000) * EXTRA_RATE;
+
+        // Total
+        const totalCost = BASE_RATE + extraCost + CARRIER_FEE + FUEL_SURCHARGE + PROCESSING_FEE;
+        const discountedCost = Math.max(0, totalCost - COUPON_DISCOUNT);
+
+        // Update DOM
+        const el = (id) => document.getElementById(id);
+        if (el('shipWeight')) el('shipWeight').textContent = weightGrams >= 1000 ? (weightGrams / 1000).toFixed(2) + ' kg' : weightGrams + 'g';
+        if (el('shipBase')) el('shipBase').textContent = '$' + BASE_RATE.toFixed(2);
+        if (el('shipExtra')) el('shipExtra').textContent = '$' + extraCost.toFixed(2);
+        if (el('shipNormal')) el('shipNormal').textContent = '$' + totalCost.toFixed(2) + ' USD';
+        if (el('shipDiscount')) el('shipDiscount').textContent = '$' + discountedCost.toFixed(2) + ' USD';
+    }
+
+    function addItem(name, weight) {
+        const existing = cart.find(i => i.name === name);
+        if (existing) {
+            existing.qty += 1;
+        } else {
+            cart.push({ name, weight, qty: 1 });
+        }
+        renderCart();
+    }
+
+    function updateQty(index, change) {
+        cart[index].qty += change;
+        if (cart[index].qty <= 0) cart.splice(index, 1);
+        renderCart();
+    }
+
+    function clearCart() {
+        cart = [];
+        renderCart();
+    }
+
+    // ---- Search ----
+    document.getElementById('itemSearch').addEventListener('input', function() {
+        const q = this.value.trim().toLowerCase();
+        if (!q) {
+            if (currentCategory) {
+                renderItems(ITEMS[currentCategory]);
+            } else {
+                showCategories();
+            }
+            return;
+        }
+        // Show items view with filtered results
+        const filtered = allItemsFlat.filter(item => item.name.toLowerCase().includes(q));
+        document.getElementById('categoryView').style.display = 'none';
+        document.getElementById('itemsView').style.display = 'block';
+        document.getElementById('currentCatTitle').textContent = `Resultados: "${this.value.trim()}"`;
+        document.getElementById('panelSub').textContent = `${filtered.length} artículos encontrados`;
+        renderItems(filtered);
+    });
+
+    // ---- Init ----
+    renderCategories();
+    renderCart();
+    </script>
+    <script defer src="script.js?v=17"></script>
+</body>
+</html>

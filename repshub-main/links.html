@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0N938PXJ1R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-0N938PXJ1R');
+    </script>
+
+    <meta name="google-site-verification" content="3gY6H49qBjyQQ_dPReii5aDbsPjU2OV4VR_30p-vqHk" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="Links y recursos útiles de RepsHub. Discord, redes sociales, herramientas de compra y más.">
+    <title>Links | RepsHub</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+    /* =====================================================
+       LINKS PAGE — ANIMATED, CENTERED & RESPONSIVE
+    ===================================================== */
+
+    /* ---- Keyframes ---- */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(28px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInDown {
+        from { opacity: 0; transform: translateY(-20px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes pulse-ring {
+        0%   { box-shadow: 0 0 0 0 rgba(223,29,72,0.55); }
+        70%  { box-shadow: 0 0 0 12px rgba(223,29,72,0); }
+        100% { box-shadow: 0 0 0 0 rgba(223,29,72,0); }
+    }
+    @keyframes shimmer {
+        0%   { background-position: -200% center; }
+        100% { background-position:  200% center; }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50%       { transform: translateY(-6px); }
+    }
+    @keyframes glow-pulse {
+        0%, 100% { opacity: 0.45; }
+        50%       { opacity: 0.65; }
+    }
+    @keyframes badge-pop {
+        0%   { transform: scale(0) rotate(-10deg); opacity: 0; }
+        70%  { transform: scale(1.15) rotate(3deg); }
+        100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* ---- Base ---- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+        background-color: #000;
+        color: #fff;
+        font-family: 'Instrument Sans', sans-serif;
+        overflow-x: hidden;
+        min-height: 100vh;
+    }
+
+    /* ---- Page Layout ---- */
+    .lk-page {
+        min-height: 100vh;
+        width: 100%;
+        position: relative;
+        display: flex;
+        justify-content: center;
+    }
+
+    /* Topography SVG layer */
+    .lk-page::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: url('topography.svg');
+        background-size: 700px;
+        opacity: 0.45;
+        filter: brightness(0) saturate(100%) invert(21%) sepia(85%) saturate(4646%) hue-rotate(338deg) brightness(120%) contrast(110%);
+        pointer-events: none;
+        z-index: 0;
+        animation: glow-pulse 4s ease-in-out infinite;
+    }
+
+    /* Vignette overlay */
+    .lk-page::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.35) 100%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .lk-wrapper {
+        position: relative;
+        z-index: 1;
+        max-width: 480px;
+        width: 100%;
+        padding: 4rem 1.5rem 5rem;
+        text-align: center;
+    }
+
+    /* ---- Profile ---- */
+    .lk-profile-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 2.2rem;
+        animation: fadeInUp 0.7s ease 0.1s both;
+    }
+    .lk-avatar-wrap {
+        position: relative;
+        width: 88px;
+        height: 88px;
+        animation: float 3.5s ease-in-out infinite;
+    }
+    .lk-avatar {
+        width: 100%; height: 100%;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 2px solid rgba(255,255,255,0.15);
+        box-shadow: 0 8px 30px rgba(223,29,72,0.25);
+        background: #111;
+    }
+    .lk-avatar img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+    .lk-avatar-wrap:hover .lk-avatar img { transform: scale(1.08); }
+    .lk-avatar-status {
+        position: absolute; bottom: 2px; right: 2px;
+        background: #fff; color: #000;
+        width: 22px; height: 22px;
+        border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 11px; font-weight: 900;
+        border: 2px solid #000;
+        animation: pulse-ring 2s ease-out infinite;
+    }
+    .lk-profile-name {
+        font-size: 1.4rem; font-weight: 800;
+        color: #fff; margin: 0;
+        text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .lk-profile-bio {
+        color: rgba(255,255,255,0.5);
+        font-size: 0.8rem; line-height: 1.5;
+        margin: 4px 0 0;
+    }
+    .lk-socials {
+        display: flex; gap: 1rem;
+        justify-content: center;
+        margin-top: 0.6rem;
+    }
+    .lk-social-icon {
+        color: rgba(255,255,255,0.4);
+        transition: all 0.3s ease;
+        display: flex;
+    }
+    .lk-social-icon:hover {
+        color: #fff;
+        transform: scale(1.2) translateY(-2px);
+        filter: drop-shadow(0 0 6px rgba(223,29,72,0.6));
+    }
+
+    /* ---- Divider ---- */
+    .lk-divider {
+        display: flex; align-items: center; gap: 1rem;
+        margin-bottom: 1.5rem;
+        animation: fadeInDown 0.5s ease 0.25s both;
+    }
+    .lk-divider::before, .lk-divider::after {
+        content: ''; flex: 1; height: 1px;
+        background: rgba(255,255,255,0.08);
+    }
+    .lk-divider span {
+        font-size: 0.6rem; font-weight: 800;
+        letter-spacing: 0.12em; text-transform: uppercase;
+        color: rgba(255,255,255,0.25);
+    }
+
+    /* ---- Cards ---- */
+    .lk-cards { display: flex; flex-direction: column; gap: 0.9rem; }
+
+    .lk-card {
+        display: block; position: relative;
+        text-decoration: none;
+        padding: 1.15rem 1.4rem;
+        border-radius: 14px;
+        text-align: center;
+        transition: all 0.35s cubic-bezier(0.2, 1, 0.3, 1);
+        opacity: 0;
+        animation: fadeInUp 0.55s ease forwards;
+    }
+    .lk-cards .lk-card:nth-child(1) { animation-delay: 0.3s; }
+    .lk-cards .lk-card:nth-child(2) { animation-delay: 0.42s; }
+    .lk-cards .lk-card:nth-child(3) { animation-delay: 0.54s; }
+    .lk-cards .lk-card:nth-child(4) { animation-delay: 0.66s; }
+    .lk-cards .lk-card:nth-child(5) { animation-delay: 0.78s; }
+    .lk-cards .lk-card:nth-child(6) { animation-delay: 0.90s; }
+    .lk-cards .lk-card:nth-child(7) { animation-delay: 1.02s; }
+    .lk-cards .lk-card:nth-child(8) { animation-delay: 1.14s; }
+
+    .lk-card-title {
+        font-size: 0.87rem; font-weight: 800;
+        text-transform: uppercase; letter-spacing: 0.07em;
+        margin-bottom: 0.25rem;
+    }
+    .lk-card-desc { font-size: 0.73rem; color: rgba(255,255,255,0.4); margin: 0; }
+
+    /* White card */
+    .lk-card-white { background: #fff; color: #000; box-shadow: 0 4px 20px rgba(255,255,255,0.05); }
+    .lk-card-white .lk-card-desc { color: rgba(0,0,0,0.5); }
+    .lk-card-white:hover { transform: translateY(-5px) scale(1.015); box-shadow: 0 16px 40px rgba(255,255,255,0.12); }
+
+    .lk-card-btn {
+        display: inline-block;
+        font-size: 0.68rem; font-weight: 800;
+        padding: 0.55rem 1.2rem;
+        border-radius: 8px; margin-top: 0.9rem;
+        color: #fff;
+        background: linear-gradient(90deg, #111 0%, #333 40%, #111 60%, #111 100%);
+        background-size: 200% auto;
+        animation: shimmer 2.5s linear infinite;
+        transition: transform 0.2s ease;
+    }
+    .lk-card-btn:hover { transform: scale(1.05); }
+
+    /* Red card */
+    .lk-card-red {
+        background: #df1d48; color: #fff;
+        box-shadow: 0 6px 30px rgba(223,29,72,0.3);
+    }
+    .lk-card-red .lk-card-desc { color: rgba(255,255,255,0.8); }
+    .lk-card-red:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 14px 50px rgba(223,29,72,0.5);
+    }
+
+    /* Dark card */
+    .lk-card-dark {
+        background: rgba(15,15,15,0.75);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255,255,255,0.05);
+        color: #fff;
+    }
+    .lk-card-dark:hover {
+        background: rgba(25,25,25,0.95);
+        border-color: rgba(223,29,72,0.45);
+        transform: translateY(-4px);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.4), 0 0 0 1px rgba(223,29,72,0.15);
+    }
+
+    /* Badges */
+    .lk-card-badge {
+        position: absolute; top: -11px; right: 16px;
+        padding: 0.25rem 0.7rem; border-radius: 6px;
+        font-size: 0.55rem; font-weight: 900;
+        text-transform: uppercase; letter-spacing: 0.06em;
+        z-index: 2; box-shadow: 0 3px 12px rgba(0,0,0,0.5);
+        opacity: 0;
+        animation: badge-pop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+    }
+    .lk-cards .lk-card:nth-child(1) .lk-card-badge { animation-delay: 0.65s; }
+    .lk-cards .lk-card:nth-child(2) .lk-card-badge { animation-delay: 0.77s; }
+    .lk-cards .lk-card:nth-child(4) .lk-card-badge { animation-delay: 1.01s; }
+    .badge-red    { background: #df1d48; color: #fff; }
+    .badge-white  { background: #fff; color: #000; }
+    .badge-outline{ background: #000; color: #fff; border: 1px solid #df1d48; }
+
+    /* ---- Footer ---- */
+    .lk-footer {
+        margin-top: 4rem;
+        opacity: 0.3;
+        font-size: 0.65rem; font-weight: 700;
+        letter-spacing: 0.1em; color: #fff;
+        animation: fadeInUp 0.6s ease 1.4s both;
+    }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 480px) {
+        .lk-wrapper { padding: 3rem 1rem 4rem; }
+        .lk-card { padding: 1rem; }
+        .lk-card-title { font-size: 0.82rem; }
+    }
+    </style>
+</head>
+<body>
+    <div class="lk-page">
+        <div class="lk-wrapper">
+
+            <!-- Profile -->
+            <div class="lk-profile-header">
+                <div class="lk-avatar-wrap">
+                    <div class="lk-avatar">
+                        <img src="images/gnz-logo.png" alt="!GNZ" onerror="this.parentElement.innerHTML='R'">
+                    </div>
+                    <div class="lk-avatar-status">!</div>
+                </div>
+                <div>
+                    <p class="lk-profile-name">!GNZ</p>
+                    <p class="lk-profile-bio">💪 Te enseño a comprar de China • Finds, guías y cupones</p>
+                    <div class="lk-socials">
+                        <a href="https://www.tiktok.com/@rxpsog" target="_blank" class="lk-social-icon">
+                            <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1v-3.5a6.37 6.37 0 00-.79-.05A6.34 6.34 0 003.15 15.2a6.34 6.34 0 0010.86 4.48V13.4a8.16 8.16 0 005.58 2.2v-3.46a4.85 4.85 0 01-3-.77V6.69z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/gonzacuevas_" target="_blank" class="lk-social-icon">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="6"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lk-divider"><span>Links</span></div>
+
+            <!-- Cards -->
+            <div class="lk-cards">
+
+                <a href="https://ikako.vip/r/gonza" target="_blank" class="lk-card lk-card-white">
+                    <span class="lk-card-badge badge-red">Oferta Limitada</span>
+                    <div class="lk-card-title">KakoBuy Registration</div>
+                    <p class="lk-card-desc">Registrate y obten $410 en cupones de envío</p>
+                    <div class="lk-card-btn">Cupón "gonza" = 15usd off para envios</div>
+                </a>
+
+                <a href="index.html" class="lk-card lk-card-red">
+                    <span class="lk-card-badge badge-white">⭐ FAVORITO</span>
+                    <div class="lk-card-title">RepsHub Website</div>
+                    <p class="lk-card-desc">Encontrá todos mis productos testeados</p>
+                </a>
+
+                <a href="https://discord.com/invite/repshub" target="_blank" class="lk-card lk-card-dark">
+                    <div class="lk-card-title">Join Our Discord</div>
+                    <p class="lk-card-desc">Unite a la comunidad de importación</p>
+                </a>
+
+                <a href="https://www.uufinds.com/qcfinds?referralCode=9VNFp24j" target="_blank" class="lk-card lk-card-dark">
+                    <span class="lk-card-badge badge-outline">NUEVO</span>
+                    <div class="lk-card-title">QC Finder Tool</div>
+                    <p class="lk-card-desc">Buscador de fotos reales de productos</p>
+                </a>
+
+                <a href="https://t.me/+ibjfw2WISF44NDcx" target="_blank" class="lk-card lk-card-dark">
+                    <div class="lk-card-title">Telegram Finds</div>
+                    <p class="lk-card-desc">Canal de ofertas y productos destacados</p>
+                </a>
+
+                <a href="peso.html" class="lk-card lk-card-dark">
+                    <div class="lk-card-title">Calculadora de Peso</div>
+                    <p class="lk-card-desc">Estimá el peso de tu paquete antes de pedir</p>
+                </a>
+
+                <a href="impuestos.html" class="lk-card lk-card-dark">
+                    <div class="lk-card-title">Calculadora de Impuestos</div>
+                    <p class="lk-card-desc">Calculo exacto para aduana Argentina</p>
+                </a>
+
+                <a href="como-comprar.html" class="lk-card lk-card-dark">
+                    <div class="lk-card-title">Guía de Compra 2026</div>
+                    <p class="lk-card-desc">Tutorial paso a paso: De China a tu casa</p>
+                </a>
+
+            </div>
+
+            <div class="lk-footer">
+                <p>&copy; 2026 REPSHUB. ALL RIGHTS RESERVED.</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

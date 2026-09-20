@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /*.json$
+Disallow: /tmp_test/
+Disallow: /admin.html
+
+# Block Vercel preview/deployment URLs
+User-agent: *
+Disallow: /_next/
+Disallow: /_vercel/
+
+# Sitemaps
+Sitemap: https://www.reps-hub.com/sitemap.xml
+
+# Canonical host
+Host: https://www.reps-hub.com

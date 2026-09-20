@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0N938PXJ1R"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-0N938PXJ1R');
+    </script>
+
+    <meta name="google-site-verification" content="3gY6H49qBjyQQ_dPReii5aDbsPjU2OV4VR_30p-vqHk" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="description" content="RepsHub - Vendedores Confiables de China. Lista de sellers verificados de Taobao, Weidian y 1688.">
+    <title>Vendedores Recomendados | RepsHub</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="style.css?v=17" type="text/css" media="all">
+    <style>
+    /* ---- Sellers Page – Moonreps Style ---- */
+    .sl-hero {
+        padding: 6rem 0 2rem; text-align: center; position: relative;
+    }
+    .sl-hero::before {
+        content: ''; position: absolute; inset: 0;
+        background: radial-gradient(ellipse 70% 50% at 50% 0%, rgba(220,38,38,0.06), transparent 70%);
+        pointer-events: none;
+    }
+    .sl-title {
+        font-family: var(--font-display, 'Space Grotesk', sans-serif);
+        font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; color: #fff;
+        margin-bottom: 0.8rem;
+    }
+    .sl-title-accent {
+        background: linear-gradient(135deg, #dc2626, #ec4899);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .sl-desc {
+        color: rgba(255,255,255,0.45); font-size: 1rem; max-width: 500px; margin: 0 auto;
+    }
+    /* Filters */
+    .sl-filters {
+        display: flex; justify-content: center; gap: 0.5rem; flex-wrap: wrap;
+        padding: 1.5rem 0 2.5rem;
+    }
+    .sl-filter-btn {
+        padding: 0.5rem 1.2rem; border-radius: 999px; font-size: 0.85rem; font-weight: 500;
+        background: transparent; border: 1px solid transparent;
+        color: rgba(255,255,255,0.5); cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .sl-filter-btn:hover {
+        color: rgba(255,255,255,0.8); background: rgba(255,255,255,0.04);
+    }
+    .sl-filter-btn.active {
+        color: #fff; background: rgba(255,255,255,0.06);
+        border-color: rgba(255,255,255,0.1);
+        box-shadow: 0 0 12px rgba(220,38,38,0.08);
+    }
+    /* Grid */
+    .sl-grid {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+        padding-bottom: 4rem;
+    }
+    @media (max-width: 900px) { .sl-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .sl-grid { grid-template-columns: 1fr; } }
+    /* Card */
+    .sl-card {
+        background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+        border-radius: 20px; padding: 1.6rem; display: flex; flex-direction: column;
+        transition: all 0.3s ease;
+    }
+    .sl-card:hover {
+        transform: scale(1.03); border-color: rgba(255,255,255,0.12);
+        background: rgba(255,255,255,0.04);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.3);
+    }
+    .sl-card-header {
+        display: flex; justify-content: space-between; align-items: center;
+        margin-bottom: 0.8rem;
+    }
+    .sl-card-name {
+        font-size: 1rem; font-weight: 800; color: #fff;
+        text-transform: uppercase; letter-spacing: 0.03em;
+    }
+    .sl-card-badge {
+        font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.65rem;
+        border-radius: 6px; background: rgba(255,255,255,0.06);
+        border: 1px solid rgba(255,255,255,0.08); color: rgba(255,255,255,0.5);
+    }
+    .sl-card-desc {
+        font-size: 0.88rem; color: rgba(255,255,255,0.45); line-height: 1.6;
+        flex: 1; margin-bottom: 1rem;
+    }
+    .sl-card-link {
+        display: inline-flex; align-items: center; gap: 0.3rem;
+        color: var(--primary-light); font-size: 0.88rem; font-weight: 600;
+        text-decoration: none; transition: gap 0.2s;
+    }
+    .sl-card-link:hover { gap: 0.6rem; }
+    /* Light theme */
+    :root[data-theme="light"] .sl-title { color: var(--text); }
+    :root[data-theme="light"] .sl-title-accent { -webkit-text-fill-color: transparent; }
+    :root[data-theme="light"] .sl-desc { color: var(--muted); }
+    :root[data-theme="light"] .sl-filter-btn { color: var(--muted); }
+    :root[data-theme="light"] .sl-filter-btn:hover { color: var(--text); background: rgba(0,0,0,0.03); }
+    :root[data-theme="light"] .sl-filter-btn.active { color: var(--text); background: rgba(0,0,0,0.05); border-color: rgba(0,0,0,0.1); }
+    :root[data-theme="light"] .sl-card { background: var(--bg-card); border-color: var(--border-light); }
+    :root[data-theme="light"] .sl-card:hover { background: var(--bg-card-2); }
+    :root[data-theme="light"] .sl-card-name { color: var(--text); }
+    :root[data-theme="light"] .sl-card-badge { background: rgba(0,0,0,0.04); border-color: rgba(0,0,0,0.08); color: var(--muted); }
+    :root[data-theme="light"] .sl-card-desc { color: var(--muted); }
+    </style>
+</head>
+<body>
+    <script>(function(){var t=localStorage.getItem('selectedTheme')||'dark';document.documentElement.setAttribute('data-theme',t)})()</script>
+
+    <header class="header" id="header">
+    <meta name="google-site-verification" content="3gY6H49qBjyQQ_dPReii5aDbsPjU2OV4VR_30p-vqHk" />
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo"><a href="index.html">RepsHub</a></div>
+                    <nav class="nav" id="nav">
+                        <ul class="nav-list">
+                            <li><a href="productos.html" class="nav-link">Productos</a></li>
+                            <li><a href="sellers.html" class="nav-link">Sellers</a></li>
+                            <li class="nav-dropdown">
+                                <button class="nav-link nav-dropdown-toggle" type="button" aria-expanded="false"><span>Más</span><svg class="nav-dropdown-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 12 15 18 9"></polyline></svg></button>
+                                <div class="nav-dropdown-menu">
+                                    <a href="como-comprar.html" class="nav-dropdown-link">Cómo Comprar</a>
+                                    <a href="batches.html" class="nav-dropdown-link">Batches</a>
+                                    <a href="crypto.html" class="nav-dropdown-link">Crypto</a>
+                                    <a href="impuestos.html" class="nav-dropdown-link">Calculadora de Impuestos</a>
+                                    <a href="peso.html" class="nav-dropdown-link">Estimador de Peso</a>
+                                    <a href="links.html" class="nav-dropdown-link">Links</a>
+                                </div>
+                            </li>
+                                                    <!-- Solo en móvil, el botón de registrarse -->
+                            <li class="nav-mobile-register">
+                                <a href="https://ikako.vip/r/gonza" target="_blank" rel="noopener noreferrer" class="btn-register-mobile">Registrarse en KakoBuy</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+                <div class="header-actions">
+                    <button class="config-toggle" id="configToggle" aria-label="Configuración">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    </button>
+                    <a href="https://ikako.vip/r/gonza" target="_blank" rel="noopener noreferrer" class="btn-register">KakoBuy Registrarse</a>
+                </div>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Alternar menú"><span></span><span></span><span></span></button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="sl-hero">
+            <div class="container">
+                <h1 class="sl-title">Vendedores <span class="sl-title-accent">Recomendados</span></h1>
+                <p class="sl-desc">Una selección de los proveedores más confiables de la comunidad</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="sl-filters" id="sellerFilters">
+                <button class="sl-filter-btn active" data-cat="all">Todos</button>
+                <button class="sl-filter-btn" data-cat="ropa">Ropa</button>
+                <button class="sl-filter-btn" data-cat="zapatillas">Zapatillas</button>
+                <button class="sl-filter-btn" data-cat="accesorios">Accesorios</button>
+            </div>
+
+            <div class="sl-grid" id="sellersGrid"></div>
+        </section>
+    </main>
+
+    <footer class="rs-footer">
+        <div class="container">
+            <div class="rs-footer-grid">
+                <div class="rs-footer-col">
+                    <strong class="rs-footer-brand">RepsHub</strong>
+                    <p class="rs-footer-bio">Explorá los mejores productos réplica, guías de compra y herramientas.</p>
+                </div>
+                <div class="rs-footer-col">
+                    <h4>Páginas</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="productos.html">Productos</a></li>
+                        <li><a href="sellers.html">Sellers</a></li>
+                        <li><a href="como-comprar.html">Cómo Comprar</a></li>
+                    </ul>
+                </div>
+                <div class="rs-footer-col">
+                    <h4>Redes</h4>
+                    <ul>
+                        <li><a href="https://discord.gg/repshub" target="_blank" rel="noopener noreferrer">Discord</a></li>
+                        <li><a href="https://www.instagram.com/gonzacuevas_" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                        <li><a href="https://www.tiktok.com/@rxpsog" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="rs-footer-bottom"><p>&copy; 2026 RepsHub. Todos los derechos reservados.</p></div>
+        </div>
+    </footer>
+
+    <script>
+    const SELLERS = [
+        // Ropa
+        { name: 'DRAGONREPS', cat: 'ropa', desc: 'Ofrece marcas como Supreme, Nike, Nocta, Corteiz, CP Company, entre otras.', url: 'https://noghost.x.yupoo.com/' },
+        { name: 'ANGELKING47', cat: 'ropa', desc: 'Especializado en marcas de Streetwear y Drip.', url: 'https://angelking47.x.yupoo.com/albums' },
+        { name: 'FIREREP', cat: 'ropa', desc: 'Catálogo con Mobius, Akimbo, Mertra, Essentials y más.', url: 'https://firerep.x.yupoo.com/' },
+        { name: 'PENGREPS', cat: 'ropa', desc: 'Especializado en Derschutze y Mertra.', url: 'https://pengreps.x.yupoo.com/albums' },
+        { name: 'GOAT', cat: 'ropa', desc: 'Encuentra Corteiz, Trapstar, Syna y todo lo nuevo del mercado Drip.', url: 'https://goat-official.x.yupoo.com/' },
+        { name: 'BULLREPS', cat: 'ropa', desc: 'El mejor vendedor de Arcteryx. También tiene varias marcas de streetwear.', url: 'https://bullrep.x.yupoo.com/' },
+        { name: 'PIKACHUSHOP', cat: 'ropa', desc: 'Hellstar 1:1, Spider 1:1, EE y muchas otras marcas de la más alta calidad.', url: 'https://pikachushop.x.yupoo.com/' },
+        { name: 'TIGERREPS', cat: 'ropa', desc: 'Variedad de Supreme, Derschutze, Nike, Jnco, Bigboi y más.', url: 'https://tiger-official.x.yupoo.com/' },
+        { name: '3MADMAN', cat: 'ropa', desc: 'Dispone de Acne Studio, Supreme, Nike, Nocta, Spider, Arte, Akimbo, etc.', url: 'https://3madman.x.yupoo.com/' },
+        { name: 'HOTDOG', cat: 'ropa', desc: 'De los mejores en Brokenplanet y Synaworld.', url: 'https://hotdog-official.x.yupoo.com/' },
+        { name: 'TOPHOTFASH', cat: 'ropa', desc: 'Todas las marcas de lujo y muchas más.', url: 'https://tophotfashion.x.yupoo.com/' },
+        { name: '1TO1', cat: 'ropa', desc: 'Las prendas de lujo más destacadas en este catálogo.', url: 'https://1to1.x.yupoo.com/' },
+        { name: 'PLANE1908', cat: 'ropa', desc: 'Artículos de CH, Gallery Dept, Celine, entre otros.', url: 'https://plane1908.x.yupoo.com/' },
+        { name: 'CHAOSMADE', cat: 'ropa', desc: 'Posee todas las marcas de Streetwear y Drip.', url: 'https://chaosmade.x.yupoo.com/' },
+        { name: 'MALPHITE', cat: 'ropa', desc: 'De lo más destacado en Stone Island.', url: 'https://malphite.x.yupoo.com/' },
+        { name: 'TOPSTONEY', cat: 'ropa', desc: 'Gran variedad de lo mejor de Stone Island.', url: 'https://topstoney.x.yupoo.com/' },
+        { name: 'JIEYI168', cat: 'ropa', desc: 'Chaquetas Puffer de Canada Goose y otras marcas.', url: 'https://jieyi168x.x.yupoo.com/albums' },
+        { name: 'FEIYU8698', cat: 'ropa', desc: 'De lo más recomendado en Canada Goose.', url: 'https://feiyu8698.x.yupoo.com/' },
+        { name: 'LOGAN', cat: 'ropa', desc: 'Encuentra Purple Jeans y muchas otras marcas.', url: 'https://loganhere.x.yupoo.com/albums' },
+        { name: 'AKDINGJI', cat: 'ropa', desc: 'Una gran cantidad de ropa y diferentes marcas.', url: 'https://akdingji.x.yupoo.com/' },
+        { name: 'ROCKETREPS', cat: 'ropa', desc: 'Ropa de lujo de la mejor calidad disponible.', url: 'https://rockets-reps.x.yupoo.com/' },
+        { name: 'TOPACNEY', cat: 'ropa', desc: 'De lo más selecto en Acne Studios.', url: 'https://topacney.x.yupoo.com/' },
+        { name: 'SHARKBREEDER', cat: 'ropa', desc: 'Vendedor especializado en TNF y Arcteryx.', url: 'https://shark-breeder.x.yupoo.com/' },
+        { name: 'UNIONKINGDOM', cat: 'ropa', desc: 'Prendas básicas de ropa de alta calidad.', url: 'https://unionkingdom.x.yupoo.com/' },
+        { name: 'MARTINREPS', cat: 'ropa', desc: 'Ropa de una calidad excelente.', url: 'https://martinreps.x.yupoo.com/' },
+        { name: 'TAURUSREPS', cat: 'ropa', desc: 'Todas las marcas con una gran relación calidad-precio.', url: 'https://deateath.x.yupoo.com/' },
+        { name: 'PPs', cat: 'ropa', desc: 'De lo más destacado en Balenciaga y Chromehearts.', url: 'https://patternerpp.x.yupoo.com/' },
+        { name: 'REP KINGDOM', cat: 'ropa', desc: 'Lo mejor que puedes encontrar en Polo Ralph Lauren.', url: 'https://repkingdom.x.yupoo.com/' },
+        { name: 'SURVIVAL CLOTH', cat: 'ropa', desc: 'Artículos de Stone Island, Chrome Hearts, etc.', url: 'https://survival-cloth.x.yupoo.com/albums' },
+        { name: 'CND CLOTH', cat: 'ropa', desc: 'Ofrece Palace, Stussy, Supreme, entre otras.', url: 'https://baymaxcloth.x.yupoo.com/' },
+        { name: 'AAAAJERSEY', cat: 'ropa', desc: 'Contraseña: \'aaaajersey\'. Es el mejor vendedor de remeras de fútbol.', url: 'https://aaaajersey.x.yupoo.com/' },
+        { name: 'SCARLETLUX', cat: 'ropa', desc: 'Amplia variedad en prendas de lujo y más.', url: 'https://scarlettluxury.x.yupoo.com/albums' },
+        { name: 'YIAYIAO', cat: 'ropa', desc: 'Indumentaria y zapatillas para niños.', url: 'https://weidian.com/?userid=1864128688' },
+        
+        // Zapatillas
+        { name: 'JMDY', cat: 'zapatillas', desc: 'Considerado el mejor vendedor de zapatillas.', url: 'https://tianjin-no1.x.yupoo.com/' },
+        { name: 'YOLO66', cat: 'zapatillas', desc: 'Lo más destacado en zapatillas.', url: 'https://yolo66.x.yupoo.com/' },
+        { name: 'WWTOP', cat: 'zapatillas', desc: 'De lo mejor en el ámbito de zapatillas.', url: 'https://wwfake100.x.yupoo.com/' },
+        { name: 'QCXCAJ1', cat: 'zapatillas', desc: 'Es un vendedor recomendado.', url: 'https://qcxcaj1.x.yupoo.com/' },
+        { name: 'PAIREPS', cat: 'zapatillas', desc: 'Vendedor sugerido.', url: 'https://pai-reps.x.yupoo.com/albums' },
+        { name: 'BAYMAX', cat: 'zapatillas', desc: 'La contraseña es: \'000000\'.', url: 'https://baymax5201314.x.yupoo.com/' },
+        { name: 'AAAABULL', cat: 'zapatillas', desc: 'La contraseña es: \'aaaaaa\'.', url: 'https://aaaabull.x.yupoo.com/' },
+        { name: 'DRAGONREPS SHOES', cat: 'zapatillas', desc: 'Un vendedor muy recomendado.', url: 'https://dragonsneakers.x.yupoo.com/' },
+        { name: 'CND SHOES', cat: 'zapatillas', desc: 'Vendedor altamente recomendado.', url: 'https://baymaxsneaker.x.yupoo.com/' },
+        { name: 'UMKAO', cat: 'zapatillas', desc: 'Sugerido por la comunidad.', url: 'https://umkao.x.yupoo.com/' },
+        { name: 'OLDCHEN', cat: 'zapatillas', desc: 'Recomendado.', url: 'https://jhj88888888.x.yupoo.com/' },
+
+        // Accesorios
+        { name: 'OGWAVE', cat: 'accesorios', desc: 'Gorras y bufandas de diferentes estilos.', url: 'https://ogwave.x.yupoo.com/' },
+        { name: 'CND ISLAND', cat: 'accesorios', desc: 'Ropa interior y las mejores medias del mercado.', url: 'https://baymaxsocks.x.yupoo.com/' },
+        { name: 'KIPPLING SELLER', cat: 'accesorios', desc: 'Bolsos y accesorios, con la mejor relación precio-calidad en Kipling.', url: 'https://moonreps.vercel.app/vendedores' }
+    ];
+
+    function renderSellers(filter = 'all') {
+        const grid = document.getElementById('sellersGrid');
+        const filtered = filter === 'all' ? SELLERS : SELLERS.filter(s => s.cat === filter);
+
+        grid.innerHTML = filtered.map(s => `
+            <div class="sl-card">
+                <div class="sl-card-header">
+                    <span class="sl-card-name">${s.name}</span>
+                    <span class="sl-card-badge">${s.cat.charAt(0).toUpperCase() + s.cat.slice(1)}</span>
+                </div>
+                <p class="sl-card-desc">${s.desc}</p>
+                <a href="${s.url}" target="_blank" rel="noopener noreferrer" class="sl-card-link">
+                    Visitar catálogo →
+                </a>
+            </div>
+        `).join('');
+    }
+
+    // Filter buttons
+    document.getElementById('sellerFilters').addEventListener('click', (e) => {
+        const btn = e.target.closest('.sl-filter-btn');
+        if (!btn) return;
+        document.querySelectorAll('.sl-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderSellers(btn.dataset.cat);
+    });
+
+    renderSellers();
+    </script>
+    <script defer src="script.js?v=17"></script>
+</body>
+</html>
