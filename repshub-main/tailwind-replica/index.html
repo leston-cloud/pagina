@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RepsHub — Spreadsheet (Réplica Tailwind)</title>
+
+<link rel="icon" type="image/png" href="../images/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="dist/tailwind.css">
+
+<style>
+  :root{
+    --bg:#080b13; --bg-card:#0b0f1a; --text:#ffffff; --text-muted:rgba(255,255,255,.55);
+    --border:rgba(255,255,255,.10); --header-bg:rgba(8,11,19,.75);
+  }
+  :root[data-theme="light"]{
+    --bg:#f7f7f8; --bg-card:#ffffff; --text:#0f0f10; --text-muted:rgba(15,15,16,.55);
+    --border:rgba(15,15,16,.10); --header-bg:rgba(255,255,255,.75);
+  }
+  html{scroll-behavior:smooth;}
+  body{background:var(--bg); color:var(--text); transition:background .2s ease, color .2s ease;}
+
+  @keyframes fade-up{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+  .anim-fade-up{animation:fade-up .7s ease both;}
+
+  @keyframes spin-magic{to{transform:rotate(360deg)}}
+  .magic-spin{animation:spin-magic 2.5s linear infinite;}
+
+  @keyframes marquee{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+  .marquee-track{animation:marquee 35s linear infinite;}
+  .marquee-track:hover{animation-play-state:paused;}
+
+  .hide-scrollbar::-webkit-scrollbar{display:none;}
+  .hide-scrollbar{scrollbar-width:none;}
+
+  .hero-dots{
+    background-image: radial-gradient(circle, rgba(255,255,255,.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, #000 40%, transparent 100%);
+  }
+  :root[data-theme="light"] .hero-dots{ background-image: radial-gradient(circle, rgba(0,0,0,.08) 1px, transparent 1px); }
+
+  .title-accent{
+    background: linear-gradient(135deg, #e8305a 0%, #f06292 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  }
+
+  .agent-avatar{ margin-left:-14px; border:3px solid var(--bg); transition: transform .25s ease, z-index 0s; }
+  .agent-avatar:first-child{ margin-left:0; }
+  .agent-avatar:hover{ transform: translateY(-4px); z-index:10; }
+
+  details.faq > summary{ list-style:none; cursor:pointer; }
+  details.faq > summary::-webkit-details-marker{ display:none; }
+  details.faq .faq-chevron{ transition: transform .2s ease; }
+  details.faq[open] .faq-chevron{ transform: rotate(180deg); }
+
+  .promo-card{ display:none; }
+  .promo-card.active{ display:flex; }
+
+  .switch-slider{ transition: transform .3s cubic-bezier(.25,1,.5,1); }
+
+  .config-panel{ transition: opacity .2s ease, visibility .2s ease; }
+  .config-panel-content{ transition: opacity .2s ease, transform .2s ease; transform-origin: top right; }
+
+  .pref-sub{ display:none; }
+  .pref-sub.active{ display:flex; }
+  .pref-check{ display:none; }
+  .pref-option.active .pref-check{ display:block; }
+
+  @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+  .skel{ background: linear-gradient(90deg, rgba(255,255,255,.03) 25%, rgba(255,255,255,.08) 50%, rgba(255,255,255,.03) 75%); background-size:200% 100%; animation:shimmer 1.5s infinite; }
+</style>
+</head>
+<body class="font-sans antialiased flex flex-col min-h-screen">
+
+<!-- ============ HEADER ============ -->
+<header class="fixed top-0 inset-x-0 z-50 backdrop-blur-md border-b" style="background:var(--header-bg); border-color:var(--border);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6">
+    <div class="flex items-center justify-between h-16 md:h-20 gap-4">
+
+      <!-- Left: Logo + nav -->
+      <div class="flex items-center gap-8">
+        <a href="#" class="text-xl font-black tracking-tight" style="color:var(--text)">RepsHub</a>
+        <nav class="hidden md:flex items-center gap-6">
+          <a href="#productos" class="text-sm font-semibold hover:text-primary-light transition-colors" style="color:var(--text-muted)">Productos</a>
+          <a href="#" class="text-sm font-semibold hover:text-primary-light transition-colors" style="color:var(--text-muted)">Sellers</a>
+          <div class="relative" id="navDropdown">
+            <button type="button" id="navDropdownToggle" class="flex items-center gap-1 text-sm font-semibold hover:text-primary-light transition-colors" style="color:var(--text-muted)" aria-expanded="false">
+              <span>Más</span>
+              <svg id="navDropdownCaret" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="transition-transform"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div id="navDropdownMenu" class="hidden absolute left-0 mt-3 w-52 rounded-xl border shadow-2xl p-2 flex-col gap-0.5" style="background:var(--bg-card); border-color:var(--border);">
+              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Cómo Comprar</a>
+              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Batches</a>
+              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Crypto</a>
+              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Calculadora de Impuestos</a>
+              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Estimador de Peso</a>
+              <a href="#" class="block px-3 py-2 rounded-lg text-sm font-medium hover:bg-white/5 hover:text-primary-light transition-colors" style="color:var(--text)">Links</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Center: search (desktop) -->
+      <form class="hidden lg:flex flex-1 max-w-md" role="search" onsubmit="return false;">
+        <label class="flex items-center gap-2 w-full rounded-xl border px-4 py-2.5 focus-within:border-primary/50 transition-colors" style="background:rgba(127,127,127,.06); border-color:var(--border);">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.35-4.35"></path></svg>
+          <input type="search" placeholder="Buscar o pegar link..." class="flex-1 bg-transparent outline-none text-sm" style="color:var(--text)">
+          <kbd class="text-xs px-1.5 py-0.5 rounded border" style="color:var(--text-muted); border-color:var(--border);">⌘K</kbd>
+        </label>
+      </form>
+
+      <!-- Right: actions -->
+      <div class="flex items-center gap-2 md:gap-3">
+        <button id="configToggle" aria-label="Configuración" class="w-9 h-9 rounded-full flex items-center justify-center border transition-colors hover:bg-white/10" style="border-color:var(--border); color:var(--text)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.6 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+        </button>
+        <a href="#" class="hidden sm:inline-flex items-center bg-primary hover:bg-primary-dark text-white text-xs md:text-sm font-bold px-3 md:px-4 py-2 rounded-full transition-colors">
+          <span class="hidden md:inline">KakoBuy&nbsp;</span>Registrarse
+        </a>
+        <button id="mobileMenuToggle" aria-label="Alternar menú" class="md:hidden w-9 h-9 flex flex-col items-center justify-center gap-1.5">
+          <span class="block w-5 h-0.5 bg-current transition-transform"></span>
+          <span class="block w-5 h-0.5 bg-current transition-opacity"></span>
+          <span class="block w-5 h-0.5 bg-current transition-transform"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile nav -->
+    <nav id="mobileNav" class="hidden md:hidden pb-4 flex flex-col gap-1 border-t pt-3" style="border-color:var(--border);">
+      <a href="#productos" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Productos</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Sellers</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Cómo Comprar</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Batches</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Crypto</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Calculadora de Impuestos</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Estimador de Peso</a>
+      <a href="#" class="px-2 py-2.5 rounded-lg text-sm font-semibold hover:bg-white/5">Links</a>
+      <a href="#" class="mt-2 inline-flex justify-center bg-primary text-white text-sm font-bold px-4 py-2.5 rounded-full">Registrarse en KakoBuy</a>
+    </nav>
+  </div>
+</header>
+
+<main class="flex-1 pt-16 md:pt-20">
+
+  <!-- ============ HERO ============ -->
+  <section class="relative overflow-hidden text-center pt-16 pb-12 md:pt-24 md:pb-16">
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <div class="absolute inset-0" style="background:
+        radial-gradient(ellipse 120% 60% at 50% -10%, rgba(220,38,38,.18) 0%, transparent 70%),
+        radial-gradient(ellipse 80% 50% at 20% 80%, rgba(220,38,38,.06) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 50% at 80% 60%, rgba(180,28,28,.06) 0%, transparent 60%);"></div>
+      <div class="absolute inset-0 hero-dots"></div>
+    </div>
+
+    <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 flex flex-col items-center gap-5 md:gap-6">
+      <div class="anim-fade-up inline-flex items-center gap-2 text-xs md:text-sm font-semibold px-3.5 py-1.5 rounded-full border" style="background:rgba(220,38,38,.1); border-color:rgba(220,38,38,.3); color:rgba(255,255,255,.85); animation-delay:.1s;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+        <span>+1,500 productos en el catálogo</span>
+      </div>
+
+      <h1 class="anim-fade-up font-black leading-none tracking-tight" style="font-size:clamp(2.75rem,10vw,6.5rem); letter-spacing:-.04em; animation-delay:.2s;">
+        RepsHub <span class="title-accent">— Spreadsheet</span>
+      </h1>
+
+      <p class="anim-fade-up max-w-md text-sm md:text-base leading-relaxed" style="color:var(--text-muted); animation-delay:.35s;">
+        Explorá nuestro spreadsheet con los mejores finds de agentes como KakoBuy, Hubbuy y más. Info detallada, fotos QC, tracking de envíos y links directos.
+      </p>
+
+      <div class="anim-fade-up flex flex-col sm:flex-row gap-3 w-full sm:w-auto justify-center" style="animation-delay:.45s;">
+        <a href="#productos" class="relative inline-flex h-[50px] overflow-hidden rounded-full p-[1px] shadow-lg hover:-translate-y-0.5 transition-transform">
+          <span class="magic-spin absolute -inset-[500%]" style="background: conic-gradient(from 90deg at 50% 50%, #E2CBFF 0%, #393BB2 50%, #E2CBFF 100%);"></span>
+          <span class="relative inline-flex items-center justify-center w-full h-full rounded-full px-6 text-sm font-bold gap-2" style="background:#0b0f1a; color:#fff;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            Explorar Productos
+          </span>
+        </a>
+        <a href="#" class="inline-flex items-center justify-center gap-2 text-sm font-bold px-6 py-3.5 rounded-full border transition-colors hover:bg-white/10" style="background:rgba(255,255,255,.06); border-color:rgba(255,255,255,.14); color:#fff;">
+          Cómo Comprar
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="anim-fade-up flex items-center gap-3" style="animation-delay:.55s;">
+        <div class="flex items-center">
+          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/oopbuylogo.png" alt="OopBuy" class="w-full h-full object-cover"></div>
+          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/kakobuylogo.png" alt="KakoBuy" class="w-full h-full object-contain scale-90"></div>
+          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden shadow-lg" style="background:#111;"><img src="../images/hubbuy-logo.png" alt="Hubbuy" class="w-full h-full object-contain scale-75"></div>
+          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/cssbuy%20logo.png" alt="CssBuy" class="w-full h-full object-contain scale-90"></div>
+          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center overflow-hidden bg-white shadow-lg"><img src="../images/Litbuy_logo.png" alt="LitBuy" class="w-full h-full object-contain scale-90"></div>
+          <div class="agent-avatar w-11 h-11 rounded-full flex items-center justify-center shadow-lg relative" style="background:linear-gradient(135deg,#450a0a 0%,#7f1d1d 100%);">
+            <span class="text-white text-sm font-extrabold" style="text-shadow:0 0 10px rgba(255,255,255,.3)">+12</span>
+          </div>
+        </div>
+        <span class="text-sm font-medium" style="color:var(--text-muted)">17 agentes soportados</span>
+      </div>
+
+      <!-- Promo carousel -->
+      <div class="anim-fade-up w-full max-w-md" id="promoCarousel" style="animation-delay:.75s;">
+        <div class="promo-card active flex-col gap-3 rounded-[20px] border p-5 backdrop-blur-md relative overflow-hidden" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1);">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <img src="../images/kakobuylogo.png" alt="KakoBuy" class="w-9 h-9 rounded-[10px] object-contain bg-white p-0.5">
+              <div>
+                <div class="text-sm font-extrabold text-white leading-none">KAKOBUY</div>
+                <div class="text-xs mt-1" style="color:rgba(255,255,255,.5)">Agente #1 en Latam</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full border" style="background:rgba(220,38,38,.15); color:#ef4444; border-color:rgba(220,38,38,.3);">Recomendado</span>
+          </div>
+          <p class="text-sm" style="color:rgba(255,255,255,.75)">Obtén $410 en cupones + $15 extra con el código <strong>"gonza"</strong></p>
+          <a href="#" class="self-start inline-flex items-center gap-1 bg-white text-black text-xs font-extrabold uppercase tracking-wide px-4 py-2 rounded-full hover:bg-gray-100 transition-colors">Reclamar</a>
+        </div>
+
+        <div class="promo-card flex-col gap-3 rounded-[20px] border p-5 backdrop-blur-md relative overflow-hidden" style="background:rgba(255,255,255,.05); border-color:rgba(255,255,255,.1);">
+          <div class="flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2.5">
+              <div class="w-9 h-9 rounded-[10px] flex items-center justify-center flex-shrink-0" style="background:#5865F2;">
+                <svg width="20" height="20" viewBox="0 0 127.14 96.36" fill="#fff"><path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg>
+              </div>
+              <div>
+                <div class="text-sm font-extrabold text-white leading-none">DISCORD</div>
+                <div class="text-xs mt-1" style="color:rgba(255,255,255,.5)">Comunidad RepsHub</div>
+              </div>
+            </div>
+            <span class="text-[10px] font-extrabold uppercase tracking-wide px-2.5 py-1 rounded-full border" style="background:rgba(34,197,94,.15); color:#4ade80; border-color:rgba(34,197,94,.3);">Gratis</span>
+          </div>
+          <p class="text-sm" style="color:rgba(255,255,255,.75)">Unite a nuestra comunidad. Finds exclusivos, reviews y soporte en tiempo real.</p>
+          <a href="#" class="self-start inline-flex items-center gap-1 bg-white text-black text-xs font-extrabold uppercase tracking-wide px-4 py-2 rounded-full hover:bg-gray-100 transition-colors">Unirme</a>
+        </div>
+
+        <div class="flex justify-center gap-2 pt-3" id="promoDots">
+          <button class="promo-dot w-1.5 h-1.5 rounded-full bg-white transition-transform scale-125" data-idx="0" aria-label="Slide 1"></button>
+          <button class="promo-dot w-1.5 h-1.5 rounded-full bg-white/25" data-idx="1" aria-label="Slide 2"></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FEATURED PRODUCTS ============ -->
+  <section id="productos" class="py-10 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 class="text-xl md:text-2xl font-extrabold">Productos Destacados</h2>
+        <a href="#" class="inline-flex items-center gap-1.5 text-sm font-semibold text-primary-light hover:gap-2.5 transition-all">
+          Ver Productos
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div id="featuredGrid" class="flex lg:grid lg:grid-cols-5 gap-4 md:gap-5 overflow-x-auto hide-scrollbar pb-2"></div>
+    </div>
+  </section>
+
+  <!-- ============ CATEGORIES ============ -->
+  <section class="py-10 md:py-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <h2 class="text-xl md:text-2xl font-extrabold mb-6">Categorías</h2>
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
+        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 18h18M5.5 18v-3a2 2 0 012-2h1l2-3h3l2 3h1a2 2 0 012 2v3"/></svg></div>
+          <h3 class="font-bold">Calzado</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Sneakers, runners y los pares que más se buscan.</p>
+        </a>
+        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15.5 2H8.5L3 7v8l3 1V22h12v-6l3-1V7l-5.5-5z"/></svg></div>
+          <h3 class="font-bold">Ropa Superior</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Remeras, hoodies, sweaters y outerwear.</p>
+        </a>
+        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2h12l-1 10-3 10h-4L7 12 6 2z"/></svg></div>
+          <h3 class="font-bold">Ropa Inferior</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Joggers, jeans, shorts y pantalones.</p>
+        </a>
+        <a href="#" class="flex flex-col gap-3.5 p-6 rounded-2xl border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.12); color:#ef4444;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg></div>
+          <h3 class="font-bold">Accesorios</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Bolsos, lentes, belts y detalles para el haul.</p>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TOOLS ============ -->
+  <section class="py-12 md:py-16 border-y" style="background:rgba(127,127,127,.02); border-color:var(--border);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest mb-2" style="color:#ef4444;">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Herramientas
+        </span>
+        <h2 class="text-2xl md:text-4xl font-black">RepsHub <em class="not-italic" style="color:#e8305a;">Tools</em></h2>
+        <p class="mt-2 text-sm md:text-base" style="color:var(--text-muted)">Herramientas gratuitas para simplificar tus compras desde China.</p>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-4 md:gap-5 mb-10">
+        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+          <h3 class="font-bold text-sm">Batches</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Compará versiones de zapatillas y entendé qué batch elegir.</p>
+        </a>
+        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M9 12h6M12 9v6"/></svg></div>
+          <h3 class="font-bold text-sm">Crypto</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Aprendé a fondear saldo con crypto y evitá errores de red.</p>
+        </a>
+        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M8 6h8M8 10h8M8 14h4"/></svg></div>
+          <h3 class="font-bold text-sm">Calculadora</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Estimá impuestos y costos totales antes de avanzar.</p>
+        </a>
+        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 8l4-4 4 4M12 4v16M4 14v4a2 2 0 002 2h12a2 2 0 002-2v-4"/></svg></div>
+          <h3 class="font-bold text-sm">Estimador de Peso</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Calcula el peso físico aproximado de tu paquete al enviar.</p>
+        </a>
+        <a href="#" class="tool-card group relative flex flex-col gap-3 p-5 rounded-2xl border w-full sm:w-[calc(50%-10px)] lg:w-[calc(33.333%-14px)] transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">
+          <div class="absolute top-5 right-5" style="color:rgba(255,255,255,.2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></div>
+          <div class="w-12 h-12 rounded-xl flex items-center justify-center" style="background:rgba(220,38,38,.1); color:#ef4444;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+          <h3 class="font-bold text-sm">Sellers</h3>
+          <p class="text-sm" style="color:var(--text-muted)">Vendedores confiables verificados para explorar mejores links.</p>
+        </a>
+      </div>
+
+      <h3 class="font-extrabold mb-4">¿Por qué RepsHub Tools?</h3>
+      <div class="grid sm:grid-cols-3 gap-4">
+        <div class="p-5 rounded-xl" style="background:rgba(127,127,127,.05);">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:rgba(34,197,94,.12); color:#22c55e;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+          <h4 class="font-bold text-sm mb-1">Gratis siempre</h4>
+          <p class="text-xs" style="color:var(--text-muted)">Todas las herramientas son completamente gratis, sin registro.</p>
+        </div>
+        <div class="p-5 rounded-xl" style="background:rgba(127,127,127,.05);">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:rgba(59,130,246,.12); color:#3b82f6;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+          <h4 class="font-bold text-sm mb-1">Rápido y confiable</h4>
+          <p class="text-xs" style="color:var(--text-muted)">Resultados instantáneos con datos precisos y actualizados.</p>
+        </div>
+        <div class="p-5 rounded-xl" style="background:rgba(127,127,127,.05);">
+          <div class="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style="background:rgba(168,85,247,.12); color:#a855f7;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+          <h4 class="font-bold text-sm mb-1">Fácil de usar</h4>
+          <p class="text-xs" style="color:var(--text-muted)">Interfaz intuitiva, sin conocimientos técnicos necesarios.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ FAQ ============ -->
+  <section class="py-12 md:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid md:grid-cols-3 gap-8 md:gap-12 items-start">
+      <div class="md:col-span-1">
+        <h2 class="text-2xl md:text-3xl font-black leading-tight">Preguntas<br>Frecuentes</h2>
+      </div>
+      <div class="md:col-span-2 flex flex-col">
+        <details class="faq border-b py-1" style="border-color:var(--border);" open>
+          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
+            ¿Qué es RepsHub?
+            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">RepsHub organiza un catálogo curado con más de 1,500 productos réplicas 1:1 desde China con enlaces directos a Taobao, Weidian y 1688.</p>
+        </details>
+        <details class="faq border-b py-1" style="border-color:var(--border);">
+          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
+            ¿Cómo uso el catálogo?
+            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">Navegá por categorías, buscá por marca o producto, y hacé click en el enlace directo para comprarlo a través de un agente.</p>
+        </details>
+        <details class="faq border-b py-1" style="border-color:var(--border);">
+          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
+            ¿Qué agentes soporta RepsHub?
+            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">Soportamos varios agentes: KakoBuy, Hubbuy, MuleBuy, CssBuy, OopBuy y LitBuy.</p>
+        </details>
+        <details class="faq border-b py-1" style="border-color:var(--border);">
+          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
+            ¿Cómo funciona la calculadora?
+            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">La calculadora estima costos totales incluyendo envío, impuestos y tasas aduaneras para Argentina.</p>
+        </details>
+        <details class="faq border-b py-1" style="border-color:var(--border);">
+          <summary class="flex items-center justify-between gap-4 py-4 text-sm font-semibold" style="color:var(--text)">
+            ¿RepsHub es gratis?
+            <svg class="faq-chevron flex-shrink-0" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </summary>
+          <p class="pb-4 text-sm leading-relaxed" style="color:var(--text-muted)">Sí, 100% gratuito. Catálogo, herramientas y guías sin costo ni registro.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ============ FLOATING ACTIONS ============ -->
+<div class="fixed bottom-5 right-5 z-[9999] flex items-end gap-3">
+  <div class="flex flex-col items-center gap-2 group">
+    <div class="opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all text-xs font-semibold text-white px-3 py-1.5 rounded-lg pointer-events-none" style="background:rgba(10,10,20,.92);">Agente Rápido</div>
+    <div id="agentQuickSwitch" class="relative flex items-center gap-0.5 h-[52px] p-1 rounded-2xl border backdrop-blur-md shadow-xl" style="background:rgba(15,15,27,.85); border-color:rgba(255,255,255,.15);" data-active="">
+      <div id="switchSlider" class="switch-slider absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] rounded-xl opacity-0" style="background:#dc2626; box-shadow:0 2px 10px rgba(220,38,38,.45);"></div>
+      <button class="switch-option relative z-10 flex items-center gap-1.5 h-full px-3 rounded-xl text-xs font-bold text-white/50 transition-colors" data-agent="LitBuy" aria-label="Seleccionar LitBuy">
+        <img src="../images/Litbuy_logo.png" alt="LitBuy" class="w-[18px] h-[18px] object-contain rounded-sm"><span>Lit</span>
+      </button>
+      <button class="switch-option relative z-10 flex items-center gap-1.5 h-full px-3 rounded-xl text-xs font-bold text-white/50 transition-colors" data-agent="KakoBuy" aria-label="Seleccionar KakoBuy">
+        <img src="../images/kakobuylogo.png" alt="KakoBuy" class="w-[18px] h-[18px] object-contain rounded-sm"><span>Kako</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="flex flex-col items-end gap-2 group">
+    <div class="opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0 transition-all text-xs font-semibold text-white px-3 py-1.5 rounded-lg pointer-events-none" style="background:rgba(10,10,20,.92);">Unirse al Discord</div>
+    <a href="#" aria-label="Unirse al Discord de RepsHub" class="w-[52px] h-[52px] rounded-2xl flex items-center justify-center shadow-xl transition-all hover:scale-105 hover:-translate-y-0.5" style="background:#5865F2;">
+      <svg width="26" height="26" viewBox="0 0 127.14 96.36" fill="#fff"><path d="M107.7 8.07A105.15 105.15 0 0 0 81.47 0a72.06 72.06 0 0 0-3.36 6.83 97.68 97.68 0 0 0-29.11 0A72.37 72.37 0 0 0 45.64 0a105.89 105.89 0 0 0-26.25 8.09C2.79 32.65-1.71 56.6.54 80.21a105.73 105.73 0 0 0 32.17 16.15 77.7 77.7 0 0 0 6.89-11.11 68.42 68.42 0 0 1-10.85-5.18c.91-.66 1.8-1.34 2.66-2a75.57 75.57 0 0 0 64.32 0c.87.71 1.76 1.39 2.66 2a68.68 68.68 0 0 1-10.87 5.19 77 77 0 0 0 6.89 11.1 105.25 105.25 0 0 0 32.19-16.14c2.64-27.38-4.51-51.11-18.9-72.15ZM42.45 65.69C36.18 65.69 31 60 31 53s5-12.74 11.43-12.74S54 46 53.89 53s-5.05 12.69-11.44 12.69Zm42.24 0C78.41 65.69 73.25 60 73.25 53s5-12.74 11.44-12.74S96.23 46 96.12 53s-5.04 12.69-11.43 12.69Z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- ============ CONFIG PANEL ============ -->
+<div id="configPanel" class="config-panel fixed top-[70px] right-4 z-[10000] opacity-0 invisible pointer-events-none">
+  <div class="config-panel-content w-[260px] rounded-xl border p-2 opacity-0 -translate-y-2 scale-95 shadow-2xl" style="background:#1c1c1c; border-color:rgba(255,255,255,.08);">
+    <div class="pref-main flex flex-col" id="prefMain">
+      <div class="px-3 py-2 text-xs font-semibold" style="color:rgba(255,255,255,.5)">Preferences</div>
+      <button class="pref-row flex items-center justify-between w-full h-10 px-3 rounded-md text-white text-sm font-medium hover:bg-white/10 transition-colors" data-pref-target="prefTheme">
+        <span>Tema</span>
+        <span class="flex items-center gap-1.5 text-[13px]" style="color:rgba(255,255,255,.7)">
+          <span id="currentThemeLabel">🌙 Oscuro</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </button>
+      <button class="pref-row flex items-center justify-between w-full h-10 px-3 rounded-md text-white text-sm font-medium hover:bg-white/10 transition-colors" data-pref-target="prefAgent">
+        <span>Agent</span>
+        <span class="flex items-center gap-1.5 text-[13px]" style="color:rgba(255,255,255,.7)">
+          <img id="currentAgentIcon" src="../images/kakobuylogo.png" class="w-4 h-4 rounded-sm object-contain">
+          <span id="currentAgentLabel">KakoBuy</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </button>
+      <button class="pref-row flex items-center justify-between w-full h-10 px-3 rounded-md text-white text-sm font-medium hover:bg-white/10 transition-colors" data-pref-target="prefCurrency">
+        <span>Moneda</span>
+        <span class="flex items-center gap-1.5 text-[13px]" style="color:rgba(255,255,255,.7)">
+          <span id="currentCurrencyLabel">¥ CNY</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-50"><polyline points="9 18 15 12 9 6"/></svg>
+        </span>
+      </button>
+    </div>
+
+    <div class="pref-sub flex-col" id="prefTheme">
+      <button class="pref-back flex items-center gap-1.5 w-full px-3 py-2 mb-1 border-b text-[13px] font-medium" style="color:rgba(255,255,255,.5); border-color:rgba(255,255,255,.06)" data-pref-back><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Tema</button>
+      <button class="pref-option active flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-theme-val="dark"><span>🌙 Oscuro</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-theme-val="light"><span>☀️ Claro</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+    </div>
+
+    <div class="pref-sub flex-col" id="prefAgent">
+      <button class="pref-back flex items-center gap-1.5 w-full px-3 py-2 mb-1 border-b text-[13px] font-medium" style="color:rgba(255,255,255,.5); border-color:rgba(255,255,255,.06)" data-pref-back><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Agent</button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="LitBuy"><span class="flex items-center gap-2"><img src="../images/Litbuy_logo.png" class="w-4 h-4 rounded-sm object-contain"> LitBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option active flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="KakoBuy"><span class="flex items-center gap-2"><img src="../images/kakobuylogo.png" class="w-4 h-4 rounded-sm object-contain"> KakoBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="Hubbuy"><span class="flex items-center gap-2"><img src="../images/hubbuy-logo.png" class="w-4 h-4 rounded-sm object-contain"> Hubbuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="CssBuy"><span class="flex items-center gap-2"><img src="../images/cssbuy%20logo.png" class="w-4 h-4 rounded-sm object-contain"> CssBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-agent="OopBuy"><span class="flex items-center gap-2"><img src="../images/oopbuylogo.png" class="w-4 h-4 rounded-sm object-contain"> OopBuy</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+    </div>
+
+    <div class="pref-sub flex-col" id="prefCurrency">
+      <button class="pref-back flex items-center gap-1.5 w-full px-3 py-2 mb-1 border-b text-[13px] font-medium" style="color:rgba(255,255,255,.5); border-color:rgba(255,255,255,.06)" data-pref-back><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Moneda</button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="USD"><span>$ USD</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option active flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="CNY"><span>¥ CNY</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="ARS"><span>$ ARS</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+      <button class="pref-option flex items-center justify-between w-full h-[34px] px-3 rounded text-sm font-medium text-white/90 hover:bg-white/10 transition-colors" data-currency="CLP"><span>$ CLP</span><svg class="pref-check w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ FOOTER ============ -->
+<footer class="border-t mt-8" style="background:rgba(127,127,127,.02); border-color:var(--border);">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-10 md:py-12">
+    <div class="grid sm:grid-cols-4 gap-8 mb-8">
+      <div class="sm:col-span-2">
+        <strong class="text-lg font-black block mb-2">RepsHub</strong>
+        <p class="text-sm max-w-xs" style="color:var(--text-muted)">Explorá los mejores productos réplica, guías de compra y herramientas.</p>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wide mb-3" style="color:rgba(255,255,255,.6)">Páginas</h4>
+        <ul class="flex flex-col gap-2 text-sm" style="color:var(--text-muted)">
+          <li><a href="#" class="hover:text-primary-light transition-colors">Home</a></li>
+          <li><a href="#productos" class="hover:text-primary-light transition-colors">Productos</a></li>
+          <li><a href="#" class="hover:text-primary-light transition-colors">Cómo Comprar</a></li>
+          <li><a href="#" class="hover:text-primary-light transition-colors">Batches</a></li>
+          <li><a href="#" class="hover:text-primary-light transition-colors">Calculadora</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-xs font-bold uppercase tracking-wide mb-3" style="color:rgba(255,255,255,.6)">Redes</h4>
+        <ul class="flex flex-col gap-2 text-sm" style="color:var(--text-muted)">
+          <li><a href="#" class="hover:text-primary-light transition-colors">Discord</a></li>
+          <li><a href="#" class="hover:text-primary-light transition-colors">Instagram</a></li>
+          <li><a href="#" class="hover:text-primary-light transition-colors">TikTok</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t pt-5 text-center text-xs" style="border-color:var(--border); color:rgba(255,255,255,.3)">
+      <p>&copy; 2026 RepsHub. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){ var t = localStorage.getItem('rs_theme') || 'dark'; document.documentElement.setAttribute('data-theme', t); })();
+
+// ---- Featured products (sample data, design demo) ----
+var SAMPLE_PRODUCTS = [
+  { name: 'Air Jordan 4 Retro "Military Black"', agent: 'KakoBuy', price: '¥ 389' },
+  { name: 'Nike Dunk Low "Panda"', agent: 'Hubbuy', price: '¥ 265' },
+  { name: 'Yeezy Boost 350 V2 "Zebra"', agent: 'LitBuy', price: '¥ 410' },
+  { name: 'North Face Nuptse Puffer', agent: 'CssBuy', price: '¥ 520' },
+  { name: 'Essentials Hoodie Fear of God', agent: 'OopBuy', price: '¥ 340' },
+];
+(function renderFeatured(){
+  var grid = document.getElementById('featuredGrid');
+  if (!grid) return;
+  grid.innerHTML = SAMPLE_PRODUCTS.map(function(p){
+    return '' +
+      '<article class="flex-shrink-0 w-[190px] lg:w-auto rounded-xl overflow-hidden border transition-all hover:-translate-y-1" style="background:var(--bg-card); border-color:var(--border);">' +
+        '<div class="h-[150px] flex items-center justify-center" style="background:rgba(127,127,127,.06);"><img src="../images/placeholder-product.svg" alt="' + p.name + '" class="w-full h-full object-contain p-6 opacity-70"></div>' +
+        '<div class="p-3">' +
+          '<p class="text-sm font-semibold leading-snug line-clamp-2">' + p.name + '</p>' +
+          '<div class="flex items-center justify-between mt-2">' +
+            '<span class="text-xs" style="color:var(--text-muted)">' + p.agent + '</span>' +
+            '<span class="text-sm font-bold" style="color:#ef4444">' + p.price + '</span>' +
+          '</div>' +
+        '</div>' +
+      '</article>';
+  }).join('');
+})();
+
+// ---- Mobile menu ----
+var mobileMenuToggle = document.getElementById('mobileMenuToggle');
+var mobileNav = document.getElementById('mobileNav');
+mobileMenuToggle.addEventListener('click', function(){
+  var open = mobileNav.classList.toggle('hidden') === false;
+  mobileMenuToggle.classList.toggle('active', open);
+  var spans = mobileMenuToggle.querySelectorAll('span');
+  if (open) {
+    spans[0].style.transform = 'translateY(6px) rotate(45deg)';
+    spans[1].style.opacity = '0';
+    spans[2].style.transform = 'translateY(-6px) rotate(-45deg)';
+  } else {
+    spans[0].style.transform = '';
+    spans[1].style.opacity = '1';
+    spans[2].style.transform = '';
+  }
+});
+
+// ---- Nav dropdown ("Más") ----
+var navDropdownToggle = document.getElementById('navDropdownToggle');
+var navDropdownMenu = document.getElementById('navDropdownMenu');
+var navDropdownCaret = document.getElementById('navDropdownCaret');
+navDropdownToggle.addEventListener('click', function(e){
+  e.stopPropagation();
+  var isOpen = !navDropdownMenu.classList.contains('hidden');
+  navDropdownMenu.classList.toggle('hidden');
+  navDropdownMenu.classList.toggle('flex', !isOpen);
+  navDropdownToggle.setAttribute('aria-expanded', String(!isOpen));
+  navDropdownCaret.style.transform = isOpen ? '' : 'rotate(180deg)';
+});
+document.addEventListener('click', function(e){
+  if (!document.getElementById('navDropdown').contains(e.target)) {
+    navDropdownMenu.classList.add('hidden');
+    navDropdownMenu.classList.remove('flex');
+    navDropdownToggle.setAttribute('aria-expanded', 'false');
+    navDropdownCaret.style.transform = '';
+  }
+});
+
+// ---- Promo carousel ----
+(function(){
+  var cards = document.querySelectorAll('#promoCarousel .promo-card');
+  var dots = document.querySelectorAll('#promoDots .promo-dot');
+  if (!cards.length) return;
+  var current = 0, timer;
+  function goTo(idx){
+    cards[current].classList.remove('active');
+    dots[current].classList.remove('scale-125');
+    dots[current].classList.add('bg-white/25');
+    dots[current].classList.remove('bg-white');
+    current = (idx + cards.length) % cards.length;
+    cards[current].classList.add('active');
+    dots[current].classList.add('scale-125', 'bg-white');
+    dots[current].classList.remove('bg-white/25');
+  }
+  function autoPlay(){ timer = setInterval(function(){ goTo(current + 1); }, 4000); }
+  dots.forEach(function(dot){
+    dot.addEventListener('click', function(){
+      clearInterval(timer);
+      goTo(parseInt(dot.getAttribute('data-idx')));
+      autoPlay();
+    });
+  });
+  var carousel = document.getElementById('promoCarousel');
+  carousel.addEventListener('mouseenter', function(){ clearInterval(timer); });
+  carousel.addEventListener('mouseleave', autoPlay);
+  autoPlay();
+})();
+
+// ---- Config panel ----
+var configToggle = document.getElementById('configToggle');
+var configPanel = document.getElementById('configPanel');
+var configPanelContent = configPanel.querySelector('.config-panel-content');
+
+function openConfigPanel(){
+  configPanel.classList.remove('opacity-0', 'invisible', 'pointer-events-none');
+  configPanelContent.classList.remove('opacity-0', '-translate-y-2', 'scale-95');
+}
+function closeConfigPanel(){
+  configPanel.classList.add('opacity-0', 'invisible', 'pointer-events-none');
+  configPanelContent.classList.add('opacity-0', '-translate-y-2', 'scale-95');
+}
+configToggle.addEventListener('click', function(e){
+  e.stopPropagation();
+  var isHidden = configPanel.classList.contains('invisible');
+  isHidden ? openConfigPanel() : closeConfigPanel();
+});
+document.addEventListener('click', function(e){
+  if (!configPanel.contains(e.target) && !configToggle.contains(e.target)) closeConfigPanel();
+});
+
+document.querySelectorAll('[data-pref-target]').forEach(function(row){
+  row.addEventListener('click', function(){
+    document.getElementById('prefMain').style.display = 'none';
+    document.getElementById(row.getAttribute('data-pref-target')).classList.add('active');
+  });
+});
+document.querySelectorAll('[data-pref-back]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    btn.closest('.pref-sub').classList.remove('active');
+    document.getElementById('prefMain').style.display = 'flex';
+  });
+});
+
+// Theme
+document.querySelectorAll('#prefTheme [data-theme-val]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var val = btn.getAttribute('data-theme-val');
+    document.documentElement.setAttribute('data-theme', val);
+    localStorage.setItem('rs_theme', val);
+    document.querySelectorAll('#prefTheme .pref-option').forEach(function(o){ o.classList.remove('active'); });
+    btn.classList.add('active');
+    document.getElementById('currentThemeLabel').textContent = val === 'dark' ? '🌙 Oscuro' : '☀️ Claro';
+  });
+});
+
+// Agent (config panel)
+var AGENT_ICONS = {
+  LitBuy: '../images/Litbuy_logo.png', KakoBuy: '../images/kakobuylogo.png',
+  Hubbuy: '../images/hubbuy-logo.png', CssBuy: '../images/cssbuy%20logo.png', OopBuy: '../images/oopbuylogo.png'
+};
+function setAgent(name){
+  document.getElementById('currentAgentLabel').textContent = name;
+  document.getElementById('currentAgentIcon').src = AGENT_ICONS[name] || AGENT_ICONS.KakoBuy;
+  localStorage.setItem('rs_agent', name);
+  document.querySelectorAll('#prefAgent .pref-option').forEach(function(o){
+    o.classList.toggle('active', o.getAttribute('data-agent') === name);
+  });
+  var qs = document.getElementById('agentQuickSwitch');
+  if (name === 'LitBuy' || name === 'KakoBuy') {
+    qs.setAttribute('data-active', name);
+    document.getElementById('switchSlider').style.opacity = '1';
+    document.getElementById('switchSlider').style.transform = name === 'KakoBuy' ? 'translateX(100%)' : 'translateX(0)';
+    document.querySelectorAll('.switch-option').forEach(function(o){
+      o.classList.toggle('text-white', o.getAttribute('data-agent') === name);
+      o.classList.toggle('text-white/50', o.getAttribute('data-agent') !== name);
+    });
+  }
+}
+document.querySelectorAll('#prefAgent [data-agent]').forEach(function(btn){
+  btn.addEventListener('click', function(){ setAgent(btn.getAttribute('data-agent')); });
+});
+
+// Currency
+document.querySelectorAll('#prefCurrency [data-currency]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var val = btn.getAttribute('data-currency');
+    var symbols = { USD: '$ USD', CNY: '¥ CNY', ARS: '$ ARS', CLP: '$ CLP' };
+    document.getElementById('currentCurrencyLabel').textContent = symbols[val];
+    localStorage.setItem('rs_currency', val);
+    document.querySelectorAll('#prefCurrency .pref-option').forEach(function(o){ o.classList.remove('active'); });
+    btn.classList.add('active');
+  });
+});
+
+// Quick switch (floating)
+document.querySelectorAll('.switch-option').forEach(function(btn){
+  btn.addEventListener('click', function(){ setAgent(btn.getAttribute('data-agent')); });
+});
+
+// Restore saved prefs
+(function(){
+  var savedAgent = localStorage.getItem('rs_agent');
+  if (savedAgent && AGENT_ICONS[savedAgent]) setAgent(savedAgent);
+  var savedCurrency = localStorage.getItem('rs_currency');
+  if (savedCurrency) document.querySelector('[data-currency="' + savedCurrency + '"]')?.click();
+})();
+</script>
+</body>
+</html>
