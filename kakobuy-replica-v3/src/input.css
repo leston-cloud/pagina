@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Nunito', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  --color-brand: #f0384a;
+  --color-brand-light: #ff6b76;
+  --color-brand-dark: #d42f40;
+
+  --color-kk-orange: #ff7015;
+  --color-kk-orange-light: #f7a978;
+  --color-kk-indigo: #5f7fec;
+  --color-kk-indigo-light: #8ba0fd;
+  --color-kk-amber: #fba10d;
+  --color-kk-amber-light: #fdba45;
+  --color-kk-peach: #fd8b69;
+  --color-kk-peach-light: #f59e83;
+}
